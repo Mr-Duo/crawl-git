@@ -1,0 +1,554 @@
+{
+    "language": "Python",
+    "domain": [],
+    "author": "Grizzlazy",
+    "contributors": [
+        "Grizzlazy"
+    ],
+    "issues": [],
+    "commits": [
+        {
+            "sha": "1b26a2e870a91e523ea9bbe4211d2c7bfa892c2e",
+            "committer": "Grizzlazy",
+            "msg": "first commit",
+            "date": "01/05/24T16:37:57",
+            "modified_files": [
+                {
+                    "name": "README.md",
+                    "type": "ADD",
+                    "added": 1,
+                    "deleted": 0,
+                    "loc": null
+                }
+            ],
+            "parents": []
+        },
+        {
+            "sha": "f1dbf0890a42cf9608170dac5205f6b5fbe446b0",
+            "committer": "Grizzlazy",
+            "msg": "first commit",
+            "date": "01/05/24T16:41:10",
+            "modified_files": [
+                {
+                    "name": "N=10_W=10_H=8_normal_0.csv",
+                    "type": "ADD",
+                    "added": 11,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "N=10_W=10_H=8_normal_1.csv",
+                    "type": "ADD",
+                    "added": 11,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "N=10_W=10_H=8_normal_2.csv",
+                    "type": "ADD",
+                    "added": 11,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "N=10_W=10_H=8_normal_3.csv",
+                    "type": "ADD",
+                    "added": 11,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "N=10_W=10_H=8_normal_4.csv",
+                    "type": "ADD",
+                    "added": 11,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "N=10_W=10_H=8_uniform_0.csv",
+                    "type": "ADD",
+                    "added": 11,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "N=10_W=10_H=8_uniform_1.csv",
+                    "type": "ADD",
+                    "added": 11,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "N=10_W=10_H=8_uniform_2.csv",
+                    "type": "ADD",
+                    "added": 11,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "N=10_W=10_H=8_uniform_3.csv",
+                    "type": "ADD",
+                    "added": 11,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "N=10_W=10_H=8_uniform_4.csv",
+                    "type": "ADD",
+                    "added": 11,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "data.cpython-39.pyc",
+                    "type": "ADD",
+                    "added": 0,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "simplex_method.cpython-39.pyc",
+                    "type": "ADD",
+                    "added": 0,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "branch_and_bound.py",
+                    "type": "ADD",
+                    "added": 145,
+                    "deleted": 0,
+                    "loc": 87
+                },
+                {
+                    "name": "data.py",
+                    "type": "ADD",
+                    "added": 72,
+                    "deleted": 0,
+                    "loc": 56
+                },
+                {
+                    "name": "main.py",
+                    "type": "ADD",
+                    "added": 111,
+                    "deleted": 0,
+                    "loc": 65
+                },
+                {
+                    "name": "simplex_method.py",
+                    "type": "ADD",
+                    "added": 64,
+                    "deleted": 0,
+                    "loc": 47
+                },
+                {
+                    "name": "test.py",
+                    "type": "ADD",
+                    "added": 59,
+                    "deleted": 0,
+                    "loc": 43
+                }
+            ],
+            "parents": [
+                "1b26a2e870a91e523ea9bbe4211d2c7bfa892c2e"
+            ]
+        },
+        {
+            "sha": "cd8f4733b623a5058f5b337fb1b35cbc2566c200",
+            "committer": "Grizzlazy",
+            "msg": "update",
+            "date": "01/05/24T17:50:38",
+            "modified_files": [
+                {
+                    "name": "simplex_method.cpython-39.pyc",
+                    "type": "MODIFY",
+                    "added": 0,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "main.py",
+                    "type": "MODIFY",
+                    "added": 40,
+                    "deleted": 63,
+                    "loc": 72
+                },
+                {
+                    "name": "simplex_method.py",
+                    "type": "MODIFY",
+                    "added": 7,
+                    "deleted": 2,
+                    "loc": 49
+                },
+                {
+                    "name": "tempCodeRunnerFile.py",
+                    "type": "ADD",
+                    "added": 5,
+                    "deleted": 0,
+                    "loc": 5
+                }
+            ],
+            "parents": [
+                "f1dbf0890a42cf9608170dac5205f6b5fbe446b0"
+            ]
+        },
+        {
+            "sha": "1c6d0615ce5c56c4a73cfa15ea6cbf3f920d6ef6",
+            "committer": "Grizzlazy",
+            "msg": "commit",
+            "date": "01/05/24T18:09:44",
+            "modified_files": [
+                {
+                    "name": "main.py",
+                    "type": "MODIFY",
+                    "added": 4,
+                    "deleted": 5,
+                    "loc": 72
+                },
+                {
+                    "name": "simplex_method.py",
+                    "type": "MODIFY",
+                    "added": 0,
+                    "deleted": 8,
+                    "loc": 49
+                }
+            ],
+            "parents": [
+                "cd8f4733b623a5058f5b337fb1b35cbc2566c200"
+            ]
+        },
+        {
+            "sha": "519530794c367981a6c91978243a7658c9482567",
+            "committer": "Grizzlazy",
+            "msg": "Update",
+            "date": "01/07/24T16:41:39",
+            "modified_files": [
+                {
+                    "name": "N=10_W=30_H=40_normal_0.csv",
+                    "type": "ADD",
+                    "added": 11,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "N=10_W=30_H=40_normal_1.csv",
+                    "type": "ADD",
+                    "added": 11,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "data.cpython-39.pyc",
+                    "type": "MODIFY",
+                    "added": 0,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "simplex_method.cpython-39.pyc",
+                    "type": "MODIFY",
+                    "added": 0,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "data.py",
+                    "type": "MODIFY",
+                    "added": 14,
+                    "deleted": 11,
+                    "loc": 56
+                },
+                {
+                    "name": "main.py",
+                    "type": "MODIFY",
+                    "added": 58,
+                    "deleted": 34,
+                    "loc": 86
+                },
+                {
+                    "name": "simplex_method.py",
+                    "type": "MODIFY",
+                    "added": 51,
+                    "deleted": 2,
+                    "loc": 93
+                },
+                {
+                    "name": "tempCodeRunnerFile.py",
+                    "type": "DELETE",
+                    "added": 0,
+                    "deleted": 5,
+                    "loc": null
+                },
+                {
+                    "name": "test.py",
+                    "type": "MODIFY",
+                    "added": 39,
+                    "deleted": 58,
+                    "loc": 30
+                },
+                {
+                    "name": "test2.py",
+                    "type": "ADD",
+                    "added": 186,
+                    "deleted": 0,
+                    "loc": 111
+                },
+                {
+                    "name": "test3.py",
+                    "type": "ADD",
+                    "added": 75,
+                    "deleted": 0,
+                    "loc": 53
+                }
+            ],
+            "parents": [
+                "1c6d0615ce5c56c4a73cfa15ea6cbf3f920d6ef6"
+            ]
+        },
+        {
+            "sha": "c28fb72f2474bbc8e39fef9223270892cef7a202",
+            "committer": "Grizzlazy",
+            "msg": "Update",
+            "date": "01/07/24T16:46:56",
+            "modified_files": [
+                {
+                    "name": "simplex_method.cpython-39.pyc",
+                    "type": "MODIFY",
+                    "added": 0,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "main.py",
+                    "type": "MODIFY",
+                    "added": 0,
+                    "deleted": 1,
+                    "loc": 85
+                }
+            ],
+            "parents": [
+                "519530794c367981a6c91978243a7658c9482567"
+            ]
+        },
+        {
+            "sha": "3b8aeda734a090916c609cdd75f0e428641514dd",
+            "committer": "Grizzlazy",
+            "msg": "Update",
+            "date": "01/07/24T17:20:39",
+            "modified_files": [
+                {
+                    "name": "data.cpython-39.pyc",
+                    "type": "MODIFY",
+                    "added": 0,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "data.py",
+                    "type": "MODIFY",
+                    "added": 16,
+                    "deleted": 9,
+                    "loc": 62
+                },
+                {
+                    "name": "main.py",
+                    "type": "MODIFY",
+                    "added": 3,
+                    "deleted": 1,
+                    "loc": 88
+                }
+            ],
+            "parents": [
+                "c28fb72f2474bbc8e39fef9223270892cef7a202"
+            ]
+        },
+        {
+            "sha": "049d18ee1177a5631c0fd3bc018e40c446902eaf",
+            "committer": "Grizzlazy",
+            "msg": "Update",
+            "date": "01/07/24T21:18:02",
+            "modified_files": [
+                {
+                    "name": "N=20_W=30_H=40_normal_0.csv",
+                    "type": "ADD",
+                    "added": 21,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "N=20_W=30_H=40_normal_1.csv",
+                    "type": "ADD",
+                    "added": 21,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "int_N=20_W=30_H=40_normal_0.csv",
+                    "type": "ADD",
+                    "added": 21,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "int_N=20_W=30_H=40_normal_1.csv",
+                    "type": "ADD",
+                    "added": 21,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "data.cpython-39.pyc",
+                    "type": "MODIFY",
+                    "added": 0,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "data.py",
+                    "type": "MODIFY",
+                    "added": 30,
+                    "deleted": 16,
+                    "loc": 73
+                },
+                {
+                    "name": "main.py",
+                    "type": "MODIFY",
+                    "added": 3,
+                    "deleted": 10,
+                    "loc": 84
+                }
+            ],
+            "parents": [
+                "3b8aeda734a090916c609cdd75f0e428641514dd"
+            ]
+        },
+        {
+            "sha": "959096e4fdde6eed9cc28628ce78e7d9f81ca0e3",
+            "committer": "Grizzlazy",
+            "msg": "Update part n",
+            "date": "01/07/24T21:25:34",
+            "modified_files": [
+                {
+                    "name": "main.py",
+                    "type": "MODIFY",
+                    "added": 17,
+                    "deleted": 6,
+                    "loc": 89
+                }
+            ],
+            "parents": [
+                "049d18ee1177a5631c0fd3bc018e40c446902eaf"
+            ]
+        },
+        {
+            "sha": "ea0548da1880a08d37baf1a188dc2eeca63aac8f",
+            "committer": "Grizzlazy",
+            "msg": "Update final final",
+            "date": "01/07/24T22:09:46",
+            "modified_files": [
+                {
+                    "name": "data.cpython-39.pyc",
+                    "type": "MODIFY",
+                    "added": 0,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "data.py",
+                    "type": "MODIFY",
+                    "added": 1,
+                    "deleted": 1,
+                    "loc": 73
+                },
+                {
+                    "name": "main.py",
+                    "type": "MODIFY",
+                    "added": 30,
+                    "deleted": 1,
+                    "loc": 112
+                }
+            ],
+            "parents": [
+                "959096e4fdde6eed9cc28628ce78e7d9f81ca0e3"
+            ]
+        },
+        {
+            "sha": "748fed39c35e28a6246abf7c323a769d71bf1c6d",
+            "committer": "Grizzlazy",
+            "msg": "Update",
+            "date": "01/07/24T22:17:14",
+            "modified_files": [
+                {
+                    "name": "branch_and_bound.py",
+                    "type": "DELETE",
+                    "added": 0,
+                    "deleted": 145,
+                    "loc": null
+                },
+                {
+                    "name": "data.py",
+                    "type": "MODIFY",
+                    "added": 1,
+                    "deleted": 0,
+                    "loc": 73
+                },
+                {
+                    "name": "main.py",
+                    "type": "MODIFY",
+                    "added": 2,
+                    "deleted": 23,
+                    "loc": 97
+                },
+                {
+                    "name": "simplex_method.py",
+                    "type": "MODIFY",
+                    "added": 61,
+                    "deleted": 29,
+                    "loc": 109
+                },
+                {
+                    "name": "test.py",
+                    "type": "DELETE",
+                    "added": 0,
+                    "deleted": 40,
+                    "loc": null
+                },
+                {
+                    "name": "test2.py",
+                    "type": "DELETE",
+                    "added": 0,
+                    "deleted": 186,
+                    "loc": null
+                },
+                {
+                    "name": "test3.py",
+                    "type": "DELETE",
+                    "added": 0,
+                    "deleted": 75,
+                    "loc": null
+                }
+            ],
+            "parents": [
+                "ea0548da1880a08d37baf1a188dc2eeca63aac8f"
+            ]
+        },
+        {
+            "sha": "dbca0c122488fa47dabb9fa3a2e386440c1129ba",
+            "committer": "Grizzlazy",
+            "msg": "Update README.md",
+            "date": "01/07/24T22:18:08",
+            "modified_files": [
+                {
+                    "name": "README.md",
+                    "type": "MODIFY",
+                    "added": 1,
+                    "deleted": 0,
+                    "loc": null
+                }
+            ],
+            "parents": [
+                "748fed39c35e28a6246abf7c323a769d71bf1c6d"
+            ]
+        }
+    ]
+}

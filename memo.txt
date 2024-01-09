@@ -1,0 +1,8 @@
+1. 1 file meta của repo
+2. 1 file chứa các commit
+3. tách raw và clean json
+4. phân biệt commit code change
+5. git blame ??
+6. time commit này - time commit trước
+7. file đc chỉnh bởi 1 commit
+8. dev exp = số file dev chỉnh 
