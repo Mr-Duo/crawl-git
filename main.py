@@ -80,8 +80,10 @@ for commit in Repository(url).traverse_commits():
             'committer': commit.author.name,
             'msg': commit.msg,
             'date': commit.committer_date.strftime('%xT%X'),
-            'modified_files': [],
-            'parents': commit.parents
+            'added': commit.insertions,
+            'parents': commit.parents,
+            "deleted": commit.deletions,
+            'modified_files': []
         })
         for file in commit.modified_files:
             if file.nloc == None:
@@ -103,4 +105,16 @@ f.write(json.dumps(raw, indent= 4))
 """
 extract 
 """
+ext = {}
+
+for commit in raw['commits']:
+    _added = commit['added']
+    _deleted = commit['deleted']
+
+ext['added'] = _added
+
+
+f = open(f'{repo}_ext.json', 'w')
+f.write(json.dumps(ext, indent= 4))
+
 
