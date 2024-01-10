@@ -1,0 +1,59 @@
+{
+    "language": "Python",
+    "domain": [],
+    "author": "Mr-Duo",
+    "contributors": [
+        "Mr-Duo"
+    ],
+    "issues": [],
+    "commits": [
+        {
+            "sha": "9e0c3011769d872612538ae1fc879417ece5a564",
+            "committer": "Mr-Duo",
+            "msg": "Add files via upload",
+            "date": "01/09/24T21:12:39",
+            "modified_files": [
+                {
+                    "name": "main.py",
+                    "type": "ADD",
+                    "added": 96,
+                    "deleted": 0,
+                    "loc": 75
+                },
+                {
+                    "name": "memo.txt",
+                    "type": "ADD",
+                    "added": 8,
+                    "deleted": 0,
+                    "loc": null
+                },
+                {
+                    "name": "q_coverage_raw.json",
+                    "type": "ADD",
+                    "added": 554,
+                    "deleted": 0,
+                    "loc": null
+                }
+            ],
+            "parents": []
+        },
+        {
+            "sha": "4506dfe0da7e0bae777f204d9eb21c9b81cffc7b",
+            "committer": "Mr-Duo",
+            "msg": "Create README.md",
+            "date": "01/09/24T21:13:54",
+            "modified_files": [
+                {
+                    "name": "README.md",
+                    "type": "ADD",
+                    "added": 5,
+                    "deleted": 0,
+                    "loc": null
+                }
+            ],
+            "parents": [
+                "9e0c3011769d872612538ae1fc879417ece5a564"
+            ]
+        }
+    ]
+}

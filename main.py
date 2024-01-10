@@ -5,7 +5,10 @@ import datetime
 from pydriller import Repository
 from git import Repo
 
-
+'''
+Giao diện dòng lệnh
+'''
+#url = sys.argv[1]
 url = 'https://github.com/Grizzlazy/q_coverage'
 
 def get_last_char (path, ch):
@@ -15,12 +18,15 @@ def get_last_char (path, ch):
 
 loc, extend = get_last_char(url, '.')
 if extend == 'git':
-    url = url[1: loc]
+    url = url[0: loc]
 
 loc, repo = get_last_char(url, '/')
 loc, owner = get_last_char(url[1: loc], '/')
 
 
+'''
+crawl
+'''
 #raw
 repo_url = f'https://api.github.com/repos/{owner}/{repo}'
 raw = {}
@@ -78,12 +84,15 @@ for commit in Repository(url).traverse_commits():
             'parents': commit.parents
         })
         for file in commit.modified_files:
+            if file.nloc == None:
+                continue
             raw["commits"][-1]['modified_files'].append({
                 'name': file.filename,
                 'type': file.change_type.name,
                 'added': file.added_lines,
                 'deleted': file.deleted_lines,
-                'loc': file.nloc
+                'loc': file.nloc,
+                'source': file.source_code
             })
 
 
@@ -92,5 +101,6 @@ f.write(json.dumps(raw, indent= 4))
     
 
 """
-ext 
+extract 
 """
+
