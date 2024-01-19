@@ -2,14 +2,17 @@ import os, sys
 import requests
 import json
 import datetime
+import re
 from pydriller import Repository
-from git import Repo
 
 '''
 Giao diện dòng lệnh
 '''
 #url = sys.argv[1]
-url = 'https://github.com/Grizzlazy/q_coverage'
+url = 'https://github.com/Mr-Duo/crawl-git'
+newpath = './Data/' 
+if not os.path.exists(newpath):
+    os.makedirs(newpath)
 
 def get_last_char (path, ch):
     loc1 = path.rfind(ch)
@@ -41,17 +44,7 @@ else:
     raw['language'] = repo_res['language']
     raw['domain'] = repo_res['topics']
     raw['author'] = repo_res['owner']['login']
-
-# list contributors
-respond = requests.get(repo_res['contributors_url'])
-if respond.status_code != 200:
-    print('Cannot fetch data: ', respond.status_code)
-    exit(1)
-else:
-    ctb_res = respond.json()
     raw['contributors'] = []
-    for contributor in ctb_res:
-        raw['contributors'].append(contributor['login'])
 
 #list issues
 loc = get_last_char(repo_res['issues_url'], '{')
@@ -72,49 +65,136 @@ else:
         })
 
 #list commits
-raw['commits'] = []
+contributors = set()
+raw['commits'] = {}
 for commit in Repository(url).traverse_commits():
+    sha = commit.hash
+    raw['commits'][sha] = {}
     if commit.lines != 0:
-        raw['commits'].append({
-            'sha': commit.hash,
-            'committer': commit.author.name,
+        contributors.add(commit.author.name)
+        raw['commits'][sha].update({
+            'author': commit.author.name,
             'msg': commit.msg,
             'date': commit.committer_date.strftime('%xT%X'),
             'added': commit.insertions,
             'parents': commit.parents,
             "deleted": commit.deletions,
-            'modified_files': []
+            'modified_files': {}
         })
         for file in commit.modified_files:
             if file.nloc == None:
                 continue
-            raw["commits"][-1]['modified_files'].append({
-                'name': file.filename,
+            name = file.filename
+            raw['commits'][sha]['modified_files'][name] = {}
+            raw["commits"][sha]['modified_files'][name].update({
                 'type': file.change_type.name,
                 'added': file.added_lines,
                 'deleted': file.deleted_lines,
                 'loc': file.nloc,
-                'source': file.source_code
+                'content': file.content,
+                'diff': file.diff_parsed,
             })
-
-
-f = open(f'{repo}_raw.json', 'w')
+        
+        if raw['commits'][sha]['modified_files'] == {}:
+            raw['commits'].popitem()
+            
+raw['contributors'] = list(contributors)
+f = open(f'{newpath}{repo}_raw.json', 'w')
 f.write(json.dumps(raw, indent= 4))
     
 
 """
 extract 
 """
+_files_ = {}
+
+for sha, commit in raw['commits'].items(): 
+    dev = raw['author']
+    cur_date = datetime.datetime.strptime(commit['date'], '%xT%X')
+
+    for name, file in commit['modified_files'].items():
+        if _files_.get(name) ==  None:
+            _files_[name] = {}
+
+        log = _files_[name].keys()
+        NUC = set()
+
+        if _files_[name].get(sha) == None:
+            _files_[name][sha] = {
+                'loc_bf': 0,
+                'dev': [],
+                'date': commit['date'],
+                'interval': 0,
+                'NUC': NUC
+            }
+
+        if len(log) > 2:
+            dad = list(log)[-2]
+            last_date = datetime.datetime.strptime(_files_[name][dad]['date'], '%xT%X')
+            
+            _files_[name][sha]['interval'] = (cur_date - last_date).total_seconds()
+            _files_[name][sha]['loc_bf'] = raw['commits'][dad]['modified_files'][name]['loc']
+
+        for s in log:
+            NUC.add(s)
+        NUC.discard(sha)
+        
+        if _files_[name][sha]['dev'].count(dev) == 0:
+            _files_[name][sha]['dev'].append(dev)
+ 
+
 ext = {}
+pp_category = ['fix', 'patch', 'defect', 'bug']
 
-for commit in raw['commits']:
-    _added = commit['added']
-    _deleted = commit['deleted']
+for sha, commit in raw['commits'].items():
+    ext[sha] = {}
+    ext[sha].update({
+        'total_added': commit['added'],
+        'total_deleted': commit['deleted'],
+        'EXP': 0,
+        'NUC': 0,
+        'total_dev': 0,
+        'avg_interval': 0,
+        'modified_files': {},
+        'purpose': []
+    })
 
-ext['added'] = _added
+    for pp in pp_category:
+        if commit['msg'].find(pp) != -1:
+            ext[sha]['purpose'].append(pp)
+    if len(ext[sha]['purpose']) == 0:
+        ext[sha]['purpose'].append('other')
+
+    AGE = 0
+    NDEV = set()
+    NUC = set()
+
+    for name, file in commit['modified_files'].items():
+        AGE += _files_[name][sha]['interval']
+        for dev in _files_[name][sha]['dev']:
+            NDEV.add(dev)
+
+        ext[sha]['modified_files'][name] = {}
+        ext[sha]['modified_files'][name].update({
+            'LT': _files_[name][sha]['loc_bf'], 
+            'NDEV': len(_files_[name][sha]['dev']),
+        })
+        NUC.update(_files_[name][sha]['NUC'])
+    
+    ext[sha]['avg_interval'] = AGE / len(commit['modified_files'].keys())
+    ext[sha]['total_dev'] = len(NDEV)
+    ext[sha]['NUC'] = len(NUC)
+
+_exp_ = {}
+for dev in raw['contributors']:
+    _exp_[dev] = 0
+for sha, commit in raw['commits'].items():
+    dev = commit['author']
+    ext[sha]['EXP'] = _exp_[dev]
+    _exp_[dev]+=1
 
 
-f = open(f'{repo}_ext.json', 'w')
+f = open(f'{newpath}{repo}_ext.json', 'w')
 f.write(json.dumps(ext, indent= 4))
 
 
