@@ -82,6 +82,8 @@ for commit in Repository(url).traverse_commits():
             'modified_files': {}
         })
         for file in commit.modified_files:
+            if file.language_supported == False:
+                continue
             if file.nloc == None:
                 continue
             name = file.filename
@@ -94,7 +96,8 @@ for commit in Repository(url).traverse_commits():
                 'content': file.source_code,
                 'diff': file.diff_parsed,
             })
-        
+            
+
         if raw['commits'][sha]['modified_files'] == {}:
             raw['commits'].popitem()
             
@@ -106,9 +109,12 @@ print('Mine completed!')
 """
 extract 
 """
+print('Start Extracting!')
 _files_ = {}
 
-for sha, commit in raw['commits'].items(): 
+for sha, commit in raw['commits'].items():
+    if len(commit.keys()) == 0:
+        continue 
     dev = raw['author']
     cur_date = datetime.datetime.strptime(commit['date'], '%xT%X')
 
@@ -144,9 +150,11 @@ for sha, commit in raw['commits'].items():
  
 
 ext = {}
-pp_category = ['fix', 'patch', 'defect', 'bug']
+pp_category = ['fix', 'patch', 'defect', 'bug', 'add']
 
 for sha, commit in raw['commits'].items():
+    if len(commit.keys()) == 0:
+        continue 
     ext[sha] = {}
     ext[sha].update({
         'total_added': commit['added'],
@@ -189,9 +197,12 @@ _exp_ = {}
 for dev in raw['contributors']:
     _exp_[dev] = 0
 for sha, commit in raw['commits'].items():
+    if len(commit.keys()) == 0:
+        continue 
     dev = commit['author']
     ext[sha]['EXP'] = _exp_[dev]
     _exp_[dev]+=1
+
 
 
 f = open(f'{newpath}{repo}_ext.json', 'w')
