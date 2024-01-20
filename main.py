@@ -8,8 +8,8 @@ from pydriller import Repository
 '''
 Giao diện dòng lệnh
 '''
-#url = sys.argv[1]
-url = 'https://github.com/Mr-Duo/crawl-git'
+url = sys.argv[1]
+#url = 'https://github.com/Mr-Duo/crawl-git'
 newpath = './Data/' 
 if not os.path.exists(newpath):
     os.makedirs(newpath)
@@ -33,7 +33,7 @@ crawl
 #raw
 repo_url = f'https://api.github.com/repos/{owner}/{repo}'
 raw = {}
-
+print('Start Mining...')
 #lang + domain + owner
 respond = requests.get(repo_url)
 if respond.status_code != 200:
@@ -91,7 +91,7 @@ for commit in Repository(url).traverse_commits():
                 'added': file.added_lines,
                 'deleted': file.deleted_lines,
                 'loc': file.nloc,
-                'content': file.content,
+                'content': file.source_code,
                 'diff': file.diff_parsed,
             })
         
@@ -101,7 +101,7 @@ for commit in Repository(url).traverse_commits():
 raw['contributors'] = list(contributors)
 f = open(f'{newpath}{repo}_raw.json', 'w')
 f.write(json.dumps(raw, indent= 4))
-    
+print('Mine completed!')    
 
 """
 extract 
@@ -196,5 +196,6 @@ for sha, commit in raw['commits'].items():
 
 f = open(f'{newpath}{repo}_ext.json', 'w')
 f.write(json.dumps(ext, indent= 4))
+print('Extract completed!')
 
 
