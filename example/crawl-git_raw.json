@@ -1,0 +1,2854 @@
+{
+    "language": "Python",
+    "domain": [],
+    "author": "Mr-Duo",
+    "contributors": [
+        "Duong",
+        "DI-huyentm",
+        "Mr-Duo"
+    ],
+    "issues": [],
+    "commits": {
+        "9e0c3011769d872612538ae1fc879417ece5a564": {
+            "committer": "Mr-Duo",
+            "msg": "Add files via upload",
+            "date": "01/09/24T21:12:39",
+            "added": 658,
+            "parents": [],
+            "deleted": 0,
+            "modified_files": {
+                "main.py": {
+                    "type": "ADD",
+                    "added": 96,
+                    "deleted": 0,
+                    "loc": 75,
+                    "content": [
+                        "import os, sys",
+                        "import requests",
+                        "import json",
+                        "import datetime",
+                        "from pydriller import Repository",
+                        "from git import Repo",
+                        "",
+                        "",
+                        "url = 'https://github.com/Grizzlazy/q_coverage'",
+                        "",
+                        "def get_last_char (path, ch):",
+                        "    loc1 = path.rfind(ch)",
+                        "    name = path[loc1+1: len(path)]",
+                        "    return loc1, name",
+                        "",
+                        "loc, extend = get_last_char(url, '.')",
+                        "if extend == 'git':",
+                        "    url = url[1: loc]",
+                        "",
+                        "loc, repo = get_last_char(url, '/')",
+                        "loc, owner = get_last_char(url[1: loc], '/')",
+                        "",
+                        "",
+                        "#raw",
+                        "repo_url = f'https://api.github.com/repos/{owner}/{repo}'",
+                        "raw = {}",
+                        "",
+                        "#lang + domain + owner",
+                        "respond = requests.get(repo_url)",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    repo_res = respond.json()",
+                        "    raw['language'] = repo_res['language']",
+                        "    raw['domain'] = repo_res['topics']",
+                        "    raw['author'] = repo_res['owner']['login']",
+                        "",
+                        "# list contributors",
+                        "respond = requests.get(repo_res['contributors_url'])",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    ctb_res = respond.json()",
+                        "    raw['contributors'] = []",
+                        "    for contributor in ctb_res:",
+                        "        raw['contributors'].append(contributor['login'])",
+                        "",
+                        "#list issues",
+                        "loc = get_last_char(repo_res['issues_url'], '{')",
+                        "issues_url = repo_res['issues_url'][0: loc[0]]",
+                        "#print(issues_url)",
+                        "respond = requests.get(issues_url)",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    issues_res = respond.json()",
+                        "    raw['issues'] = []",
+                        "    for issue in issues_res:",
+                        "        raw['issues'].append({",
+                        "            'number': issue['number'],",
+                        "            'title': issue['title'],",
+                        "            'user': issue['user']['login']",
+                        "        })",
+                        "",
+                        "#list commits",
+                        "raw['commits'] = []",
+                        "for commit in Repository(url).traverse_commits():",
+                        "    if commit.lines != 0:",
+                        "        raw['commits'].append({",
+                        "            'sha': commit.hash,",
+                        "            'committer': commit.author.name,",
+                        "            'msg': commit.msg,",
+                        "            'date': commit.committer_date.strftime('%xT%X'),",
+                        "            'modified_files': [],",
+                        "            'parents': commit.parents",
+                        "        })",
+                        "        for file in commit.modified_files:",
+                        "            raw[\"commits\"][-1]['modified_files'].append({",
+                        "                'name': file.filename,",
+                        "                'type': file.change_type.name,",
+                        "                'added': file.added_lines,",
+                        "                'deleted': file.deleted_lines,",
+                        "                'loc': file.nloc",
+                        "            })",
+                        "",
+                        "",
+                        "f = open(f'{repo}_raw.json', 'w')",
+                        "f.write(json.dumps(raw, indent= 4))",
+                        "    ",
+                        "",
+                        "\"\"\"",
+                        "ext ",
+                        "\"\"\""
+                    ],
+                    "diff": {
+                        "added": [
+                            [
+                                1,
+                                "import os, sys"
+                            ],
+                            [
+                                2,
+                                "import requests"
+                            ],
+                            [
+                                3,
+                                "import json"
+                            ],
+                            [
+                                4,
+                                "import datetime"
+                            ],
+                            [
+                                5,
+                                "from pydriller import Repository"
+                            ],
+                            [
+                                6,
+                                "from git import Repo"
+                            ],
+                            [
+                                7,
+                                ""
+                            ],
+                            [
+                                8,
+                                ""
+                            ],
+                            [
+                                9,
+                                "url = 'https://github.com/Grizzlazy/q_coverage'"
+                            ],
+                            [
+                                10,
+                                ""
+                            ],
+                            [
+                                11,
+                                "def get_last_char (path, ch):"
+                            ],
+                            [
+                                12,
+                                "    loc1 = path.rfind(ch)"
+                            ],
+                            [
+                                13,
+                                "    name = path[loc1+1: len(path)]"
+                            ],
+                            [
+                                14,
+                                "    return loc1, name"
+                            ],
+                            [
+                                15,
+                                ""
+                            ],
+                            [
+                                16,
+                                "loc, extend = get_last_char(url, '.')"
+                            ],
+                            [
+                                17,
+                                "if extend == 'git':"
+                            ],
+                            [
+                                18,
+                                "    url = url[1: loc]"
+                            ],
+                            [
+                                19,
+                                ""
+                            ],
+                            [
+                                20,
+                                "loc, repo = get_last_char(url, '/')"
+                            ],
+                            [
+                                21,
+                                "loc, owner = get_last_char(url[1: loc], '/')"
+                            ],
+                            [
+                                22,
+                                ""
+                            ],
+                            [
+                                23,
+                                ""
+                            ],
+                            [
+                                24,
+                                "#raw"
+                            ],
+                            [
+                                25,
+                                "repo_url = f'https://api.github.com/repos/{owner}/{repo}'"
+                            ],
+                            [
+                                26,
+                                "raw = {}"
+                            ],
+                            [
+                                27,
+                                ""
+                            ],
+                            [
+                                28,
+                                "#lang + domain + owner"
+                            ],
+                            [
+                                29,
+                                "respond = requests.get(repo_url)"
+                            ],
+                            [
+                                30,
+                                "if respond.status_code != 200:"
+                            ],
+                            [
+                                31,
+                                "    print('Cannot fetch data: ', respond.status_code)"
+                            ],
+                            [
+                                32,
+                                "    exit(1)"
+                            ],
+                            [
+                                33,
+                                "else:"
+                            ],
+                            [
+                                34,
+                                "    repo_res = respond.json()"
+                            ],
+                            [
+                                35,
+                                "    raw['language'] = repo_res['language']"
+                            ],
+                            [
+                                36,
+                                "    raw['domain'] = repo_res['topics']"
+                            ],
+                            [
+                                37,
+                                "    raw['author'] = repo_res['owner']['login']"
+                            ],
+                            [
+                                38,
+                                ""
+                            ],
+                            [
+                                39,
+                                "# list contributors"
+                            ],
+                            [
+                                40,
+                                "respond = requests.get(repo_res['contributors_url'])"
+                            ],
+                            [
+                                41,
+                                "if respond.status_code != 200:"
+                            ],
+                            [
+                                42,
+                                "    print('Cannot fetch data: ', respond.status_code)"
+                            ],
+                            [
+                                43,
+                                "    exit(1)"
+                            ],
+                            [
+                                44,
+                                "else:"
+                            ],
+                            [
+                                45,
+                                "    ctb_res = respond.json()"
+                            ],
+                            [
+                                46,
+                                "    raw['contributors'] = []"
+                            ],
+                            [
+                                47,
+                                "    for contributor in ctb_res:"
+                            ],
+                            [
+                                48,
+                                "        raw['contributors'].append(contributor['login'])"
+                            ],
+                            [
+                                49,
+                                ""
+                            ],
+                            [
+                                50,
+                                "#list issues"
+                            ],
+                            [
+                                51,
+                                "loc = get_last_char(repo_res['issues_url'], '{')"
+                            ],
+                            [
+                                52,
+                                "issues_url = repo_res['issues_url'][0: loc[0]]"
+                            ],
+                            [
+                                53,
+                                "#print(issues_url)"
+                            ],
+                            [
+                                54,
+                                "respond = requests.get(issues_url)"
+                            ],
+                            [
+                                55,
+                                "if respond.status_code != 200:"
+                            ],
+                            [
+                                56,
+                                "    print('Cannot fetch data: ', respond.status_code)"
+                            ],
+                            [
+                                57,
+                                "    exit(1)"
+                            ],
+                            [
+                                58,
+                                "else:"
+                            ],
+                            [
+                                59,
+                                "    issues_res = respond.json()"
+                            ],
+                            [
+                                60,
+                                "    raw['issues'] = []"
+                            ],
+                            [
+                                61,
+                                "    for issue in issues_res:"
+                            ],
+                            [
+                                62,
+                                "        raw['issues'].append({"
+                            ],
+                            [
+                                63,
+                                "            'number': issue['number'],"
+                            ],
+                            [
+                                64,
+                                "            'title': issue['title'],"
+                            ],
+                            [
+                                65,
+                                "            'user': issue['user']['login']"
+                            ],
+                            [
+                                66,
+                                "        })"
+                            ],
+                            [
+                                67,
+                                ""
+                            ],
+                            [
+                                68,
+                                "#list commits"
+                            ],
+                            [
+                                69,
+                                "raw['commits'] = []"
+                            ],
+                            [
+                                70,
+                                "for commit in Repository(url).traverse_commits():"
+                            ],
+                            [
+                                71,
+                                "    if commit.lines != 0:"
+                            ],
+                            [
+                                72,
+                                "        raw['commits'].append({"
+                            ],
+                            [
+                                73,
+                                "            'sha': commit.hash,"
+                            ],
+                            [
+                                74,
+                                "            'committer': commit.author.name,"
+                            ],
+                            [
+                                75,
+                                "            'msg': commit.msg,"
+                            ],
+                            [
+                                76,
+                                "            'date': commit.committer_date.strftime('%xT%X'),"
+                            ],
+                            [
+                                77,
+                                "            'modified_files': [],"
+                            ],
+                            [
+                                78,
+                                "            'parents': commit.parents"
+                            ],
+                            [
+                                79,
+                                "        })"
+                            ],
+                            [
+                                80,
+                                "        for file in commit.modified_files:"
+                            ],
+                            [
+                                81,
+                                "            raw[\"commits\"][-1]['modified_files'].append({"
+                            ],
+                            [
+                                82,
+                                "                'name': file.filename,"
+                            ],
+                            [
+                                83,
+                                "                'type': file.change_type.name,"
+                            ],
+                            [
+                                84,
+                                "                'added': file.added_lines,"
+                            ],
+                            [
+                                85,
+                                "                'deleted': file.deleted_lines,"
+                            ],
+                            [
+                                86,
+                                "                'loc': file.nloc"
+                            ],
+                            [
+                                87,
+                                "            })"
+                            ],
+                            [
+                                88,
+                                ""
+                            ],
+                            [
+                                89,
+                                ""
+                            ],
+                            [
+                                90,
+                                "f = open(f'{repo}_raw.json', 'w')"
+                            ],
+                            [
+                                91,
+                                "f.write(json.dumps(raw, indent= 4))"
+                            ],
+                            [
+                                92,
+                                ""
+                            ],
+                            [
+                                93,
+                                ""
+                            ],
+                            [
+                                94,
+                                "\"\"\""
+                            ],
+                            [
+                                95,
+                                "ext"
+                            ],
+                            [
+                                96,
+                                "\"\"\""
+                            ]
+                        ],
+                        "deleted": []
+                    }
+                }
+            }
+        },
+        "66e6c999650753e9ee0b73e8caafeaa53396ae59": {
+            "committer": "Duong",
+            "msg": "update",
+            "date": "01/10/24T10:55:34",
+            "added": 178,
+            "parents": [
+                "f2056d5fbda155b79a800d1c4a163d44cb8afece"
+            ],
+            "deleted": 260,
+            "modified_files": {
+                "crawl.py": {
+                    "type": "ADD",
+                    "added": 18,
+                    "deleted": 0,
+                    "loc": 14,
+                    "content": [
+                        "import requests\nfrom PyDriller import Repository\n\ndef url_crawl (url):\n    res = requests.get('https://api.github.com/repos/{}'.format(url))\n    if repo_res.status_code == 200:\n        return res.json()\n    else:\n        return {}\n\ndef repo_crawl (user, repo):\n    url = '{}/{}'.format(user, repo)\n    return url_crawl(url)\n\ndef commits_crawl (user, repo):\n    url = '{}/{}/commits'.format(user, repo)\n    return url_crawl(url)\n\n"
+                    ],
+                    "diff": {
+                        "added": [
+                            [
+                                1,
+                                "import requests"
+                            ],
+                            [
+                                2,
+                                "from PyDriller import Repository"
+                            ],
+                            [
+                                3,
+                                ""
+                            ],
+                            [
+                                4,
+                                "def url_crawl (url):"
+                            ],
+                            [
+                                5,
+                                "    res = requests.get('https://api.github.com/repos/{}'.format(url))"
+                            ],
+                            [
+                                6,
+                                "    if repo_res.status_code == 200:"
+                            ],
+                            [
+                                7,
+                                "        return res.json()"
+                            ],
+                            [
+                                8,
+                                "    else:"
+                            ],
+                            [
+                                9,
+                                "        return {}"
+                            ],
+                            [
+                                10,
+                                ""
+                            ],
+                            [
+                                11,
+                                "def repo_crawl (user, repo):"
+                            ],
+                            [
+                                12,
+                                "    url = '{}/{}'.format(user, repo)"
+                            ],
+                            [
+                                13,
+                                "    return url_crawl(url)"
+                            ],
+                            [
+                                14,
+                                ""
+                            ],
+                            [
+                                15,
+                                "def commits_crawl (user, repo):"
+                            ],
+                            [
+                                16,
+                                "    url = '{}/{}/commits'.format(user, repo)"
+                            ],
+                            [
+                                17,
+                                "    return url_crawl(url)"
+                            ],
+                            [
+                                18,
+                                ""
+                            ]
+                        ],
+                        "deleted": []
+                    }
+                },
+                "main.py": {
+                    "type": "MODIFY",
+                    "added": 15,
+                    "deleted": 5,
+                    "loc": 84,
+                    "content": [
+                        "import os, sys",
+                        "import requests",
+                        "import json",
+                        "import datetime",
+                        "from pydriller import Repository",
+                        "from git import Repo",
+                        "",
+                        "'''",
+                        "Giao di\u1ec7n d\u00f2ng l\u1ec7nh",
+                        "'''",
+                        "#url = sys.argv[1]",
+                        "url = 'https://github.com/Grizzlazy/q_coverage'",
+                        "",
+                        "def get_last_char (path, ch):",
+                        "    loc1 = path.rfind(ch)",
+                        "    name = path[loc1+1: len(path)]",
+                        "    return loc1, name",
+                        "",
+                        "loc, extend = get_last_char(url, '.')",
+                        "if extend == 'git':",
+                        "    url = url[0: loc]",
+                        "",
+                        "loc, repo = get_last_char(url, '/')",
+                        "loc, owner = get_last_char(url[1: loc], '/')",
+                        "",
+                        "",
+                        "'''",
+                        "crawl",
+                        "'''",
+                        "#raw",
+                        "repo_url = f'https://api.github.com/repos/{owner}/{repo}'",
+                        "raw = {}",
+                        "",
+                        "#lang + domain + owner",
+                        "respond = requests.get(repo_url)",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    repo_res = respond.json()",
+                        "    raw['language'] = repo_res['language']",
+                        "    raw['domain'] = repo_res['topics']",
+                        "    raw['author'] = repo_res['owner']['login']",
+                        "",
+                        "# list contributors",
+                        "respond = requests.get(repo_res['contributors_url'])",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    ctb_res = respond.json()",
+                        "    raw['contributors'] = []",
+                        "    for contributor in ctb_res:",
+                        "        raw['contributors'].append(contributor['login'])",
+                        "",
+                        "#list issues",
+                        "loc = get_last_char(repo_res['issues_url'], '{')",
+                        "issues_url = repo_res['issues_url'][0: loc[0]]",
+                        "#print(issues_url)",
+                        "respond = requests.get(issues_url)",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    issues_res = respond.json()",
+                        "    raw['issues'] = []",
+                        "    for issue in issues_res:",
+                        "        raw['issues'].append({",
+                        "            'number': issue['number'],",
+                        "            'title': issue['title'],",
+                        "            'user': issue['user']['login']",
+                        "        })",
+                        "",
+                        "#list commits",
+                        "raw['commits'] = []",
+                        "for commit in Repository(url).traverse_commits():",
+                        "    if commit.lines != 0:",
+                        "        raw['commits'].append({",
+                        "            'sha': commit.hash,",
+                        "            'committer': commit.author.name,",
+                        "            'msg': commit.msg,",
+                        "            'date': commit.committer_date.strftime('%xT%X'),",
+                        "            'modified_files': [],",
+                        "            'parents': commit.parents",
+                        "        })",
+                        "        for file in commit.modified_files:",
+                        "            if file.nloc == None:",
+                        "                continue",
+                        "            raw[\"commits\"][-1]['modified_files'].append({",
+                        "                'name': file.filename,",
+                        "                'type': file.change_type.name,",
+                        "                'added': file.added_lines,",
+                        "                'deleted': file.deleted_lines,",
+                        "                'loc': file.nloc,",
+                        "                'source': file.source_code",
+                        "            })",
+                        "",
+                        "",
+                        "f = open(f'{repo}_raw.json', 'w')",
+                        "f.write(json.dumps(raw, indent= 4))",
+                        "    ",
+                        "",
+                        "\"\"\"",
+                        "extract ",
+                        "\"\"\"",
+                        "",
+                        ""
+                    ],
+                    "diff": {
+                        "added": [
+                            [
+                                8,
+                                "'''"
+                            ],
+                            [
+                                9,
+                                "Giao di\u1ec7n d\u00f2ng l\u1ec7nh"
+                            ],
+                            [
+                                10,
+                                "'''"
+                            ],
+                            [
+                                11,
+                                "#url = sys.argv[1]"
+                            ],
+                            [
+                                21,
+                                "    url = url[0: loc]"
+                            ],
+                            [
+                                27,
+                                "'''"
+                            ],
+                            [
+                                28,
+                                "crawl"
+                            ],
+                            [
+                                29,
+                                "'''"
+                            ],
+                            [
+                                87,
+                                "            if file.nloc == None:"
+                            ],
+                            [
+                                88,
+                                "                continue"
+                            ],
+                            [
+                                94,
+                                "                'loc': file.nloc,"
+                            ],
+                            [
+                                95,
+                                "                'source': file.source_code"
+                            ],
+                            [
+                                104,
+                                "extract"
+                            ],
+                            [
+                                105,
+                                "\"\"\""
+                            ],
+                            [
+                                106,
+                                ""
+                            ]
+                        ],
+                        "deleted": [
+                            [
+                                8,
+                                ""
+                            ],
+                            [
+                                18,
+                                "    url = url[1: loc]"
+                            ],
+                            [
+                                86,
+                                "                'loc': file.nloc"
+                            ],
+                            [
+                                95,
+                                "ext"
+                            ],
+                            [
+                                96,
+                                "\"\"\""
+                            ]
+                        ]
+                    }
+                },
+                "test.py": {
+                    "type": "ADD",
+                    "added": 10,
+                    "deleted": 0,
+                    "loc": 7,
+                    "content": [
+                        "from pydriller import Repository\nfrom pydriller.metrics.process.contributors_count import ContributorsCount\nurl = 'https://github.com/Grizzlazy/q_coverage'\n\nfrom_date = '2020-'\n\nfor commit in Repository(url).traverse_commits():\n    for file in commit.modified_files:\n        print(f'{file.filename} has {file.nloc} in commit {commit.hash}')\n    "
+                    ],
+                    "diff": {
+                        "added": [
+                            [
+                                1,
+                                "from pydriller import Repository"
+                            ],
+                            [
+                                2,
+                                "from pydriller.metrics.process.contributors_count import ContributorsCount"
+                            ],
+                            [
+                                3,
+                                "url = 'https://github.com/Grizzlazy/q_coverage'"
+                            ],
+                            [
+                                4,
+                                ""
+                            ],
+                            [
+                                5,
+                                "from_date = '2020-'"
+                            ],
+                            [
+                                6,
+                                ""
+                            ],
+                            [
+                                7,
+                                "for commit in Repository(url).traverse_commits():"
+                            ],
+                            [
+                                8,
+                                "    for file in commit.modified_files:"
+                            ],
+                            [
+                                9,
+                                "        print(f'{file.filename} has {file.nloc} in commit {commit.hash}')"
+                            ],
+                            [
+                                10,
+                                ""
+                            ]
+                        ],
+                        "deleted": []
+                    }
+                }
+            }
+        },
+        "7aa8e34a74391f2ab0632a085dc7c0eb487bb994": {
+            "committer": "Duong",
+            "msg": "hello",
+            "date": "01/10/24T10:58:03",
+            "added": 16,
+            "parents": [
+                "66e6c999650753e9ee0b73e8caafeaa53396ae59"
+            ],
+            "deleted": 2,
+            "modified_files": {
+                "main.py": {
+                    "type": "MODIFY",
+                    "added": 16,
+                    "deleted": 2,
+                    "loc": 93,
+                    "content": [
+                        "import os, sys",
+                        "import requests",
+                        "import json",
+                        "import datetime",
+                        "from pydriller import Repository",
+                        "from git import Repo",
+                        "",
+                        "'''",
+                        "Giao di\u1ec7n d\u00f2ng l\u1ec7nh",
+                        "'''",
+                        "#url = sys.argv[1]",
+                        "url = 'https://github.com/Grizzlazy/q_coverage'",
+                        "",
+                        "def get_last_char (path, ch):",
+                        "    loc1 = path.rfind(ch)",
+                        "    name = path[loc1+1: len(path)]",
+                        "    return loc1, name",
+                        "",
+                        "loc, extend = get_last_char(url, '.')",
+                        "if extend == 'git':",
+                        "    url = url[0: loc]",
+                        "",
+                        "loc, repo = get_last_char(url, '/')",
+                        "loc, owner = get_last_char(url[1: loc], '/')",
+                        "",
+                        "",
+                        "'''",
+                        "crawl",
+                        "'''",
+                        "#raw",
+                        "repo_url = f'https://api.github.com/repos/{owner}/{repo}'",
+                        "raw = {}",
+                        "",
+                        "#lang + domain + owner",
+                        "respond = requests.get(repo_url)",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    repo_res = respond.json()",
+                        "    raw['language'] = repo_res['language']",
+                        "    raw['domain'] = repo_res['topics']",
+                        "    raw['author'] = repo_res['owner']['login']",
+                        "",
+                        "# list contributors",
+                        "respond = requests.get(repo_res['contributors_url'])",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    ctb_res = respond.json()",
+                        "    raw['contributors'] = []",
+                        "    for contributor in ctb_res:",
+                        "        raw['contributors'].append(contributor['login'])",
+                        "",
+                        "#list issues",
+                        "loc = get_last_char(repo_res['issues_url'], '{')",
+                        "issues_url = repo_res['issues_url'][0: loc[0]]",
+                        "#print(issues_url)",
+                        "respond = requests.get(issues_url)",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    issues_res = respond.json()",
+                        "    raw['issues'] = []",
+                        "    for issue in issues_res:",
+                        "        raw['issues'].append({",
+                        "            'number': issue['number'],",
+                        "            'title': issue['title'],",
+                        "            'user': issue['user']['login']",
+                        "        })",
+                        "",
+                        "#list commits",
+                        "raw['commits'] = []",
+                        "for commit in Repository(url).traverse_commits():",
+                        "    if commit.lines != 0:",
+                        "        raw['commits'].append({",
+                        "            'sha': commit.hash,",
+                        "            'committer': commit.author.name,",
+                        "            'msg': commit.msg,",
+                        "            'date': commit.committer_date.strftime('%xT%X'),",
+                        "            'added': commit.insertions,",
+                        "            'parents': commit.parents,",
+                        "            \"deleted\": commit.deletions,",
+                        "            'modified_files': []",
+                        "        })",
+                        "        for file in commit.modified_files:",
+                        "            if file.nloc == None:",
+                        "                continue",
+                        "            raw[\"commits\"][-1]['modified_files'].append({",
+                        "                'name': file.filename,",
+                        "                'type': file.change_type.name,",
+                        "                'added': file.added_lines,",
+                        "                'deleted': file.deleted_lines,",
+                        "                'loc': file.nloc,",
+                        "                'source': file.source_code",
+                        "            })",
+                        "",
+                        "",
+                        "f = open(f'{repo}_raw.json', 'w')",
+                        "f.write(json.dumps(raw, indent= 4))",
+                        "    ",
+                        "",
+                        "\"\"\"",
+                        "extract ",
+                        "\"\"\"",
+                        "ext = {}",
+                        "",
+                        "for commit in raw['commits']:",
+                        "    _added = commit['added']",
+                        "    _deleted = commit['deleted']",
+                        "",
+                        "ext['added'] = _added",
+                        "",
+                        "",
+                        "f = open(f'{repo}_ext.json', 'w')",
+                        "f.write(json.dumps(ext, indent= 4))",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "diff": {
+                        "added": [
+                            [
+                                83,
+                                "            'added': commit.insertions,"
+                            ],
+                            [
+                                84,
+                                "            'parents': commit.parents,"
+                            ],
+                            [
+                                85,
+                                "            \"deleted\": commit.deletions,"
+                            ],
+                            [
+                                86,
+                                "            'modified_files': []"
+                            ],
+                            [
+                                108,
+                                "ext = {}"
+                            ],
+                            [
+                                109,
+                                ""
+                            ],
+                            [
+                                110,
+                                "for commit in raw['commits']:"
+                            ],
+                            [
+                                111,
+                                "    _added = commit['added']"
+                            ],
+                            [
+                                112,
+                                "    _deleted = commit['deleted']"
+                            ],
+                            [
+                                113,
+                                ""
+                            ],
+                            [
+                                114,
+                                "ext['added'] = _added"
+                            ],
+                            [
+                                115,
+                                ""
+                            ],
+                            [
+                                116,
+                                ""
+                            ],
+                            [
+                                117,
+                                "f = open(f'{repo}_ext.json', 'w')"
+                            ],
+                            [
+                                118,
+                                "f.write(json.dumps(ext, indent= 4))"
+                            ],
+                            [
+                                119,
+                                ""
+                            ]
+                        ],
+                        "deleted": [
+                            [
+                                83,
+                                "            'modified_files': [],"
+                            ],
+                            [
+                                84,
+                                "            'parents': commit.parents"
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        "f8d39660fce28a791180d79b60a38481afdcce77": {
+            "committer": "Mr-Duo",
+            "msg": "Add files via upload",
+            "date": "01/19/24T17:43:10",
+            "added": 109,
+            "parents": [
+                "7aa8e34a74391f2ab0632a085dc7c0eb487bb994"
+            ],
+            "deleted": 29,
+            "modified_files": {
+                "main.py": {
+                    "type": "MODIFY",
+                    "added": 109,
+                    "deleted": 29,
+                    "loc": 160,
+                    "content": [
+                        "import os, sys",
+                        "import requests",
+                        "import json",
+                        "import datetime",
+                        "import re",
+                        "from pydriller import Repository",
+                        "",
+                        "'''",
+                        "Giao di\u1ec7n d\u00f2ng l\u1ec7nh",
+                        "'''",
+                        "#url = sys.argv[1]",
+                        "url = 'https://github.com/Mr-Duo/crawl-git'",
+                        "newpath = './Data/' ",
+                        "if not os.path.exists(newpath):",
+                        "    os.makedirs(newpath)",
+                        "",
+                        "def get_last_char (path, ch):",
+                        "    loc1 = path.rfind(ch)",
+                        "    name = path[loc1+1: len(path)]",
+                        "    return loc1, name",
+                        "",
+                        "loc, extend = get_last_char(url, '.')",
+                        "if extend == 'git':",
+                        "    url = url[0: loc]",
+                        "",
+                        "loc, repo = get_last_char(url, '/')",
+                        "loc, owner = get_last_char(url[1: loc], '/')",
+                        "",
+                        "",
+                        "'''",
+                        "crawl",
+                        "'''",
+                        "#raw",
+                        "repo_url = f'https://api.github.com/repos/{owner}/{repo}'",
+                        "raw = {}",
+                        "",
+                        "#lang + domain + owner",
+                        "respond = requests.get(repo_url)",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    repo_res = respond.json()",
+                        "    raw['language'] = repo_res['language']",
+                        "    raw['domain'] = repo_res['topics']",
+                        "    raw['author'] = repo_res['owner']['login']",
+                        "    raw['contributors'] = []",
+                        "",
+                        "#list issues",
+                        "loc = get_last_char(repo_res['issues_url'], '{')",
+                        "issues_url = repo_res['issues_url'][0: loc[0]]",
+                        "#print(issues_url)",
+                        "respond = requests.get(issues_url)",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    issues_res = respond.json()",
+                        "    raw['issues'] = []",
+                        "    for issue in issues_res:",
+                        "        raw['issues'].append({",
+                        "            'number': issue['number'],",
+                        "            'title': issue['title'],",
+                        "            'user': issue['user']['login']",
+                        "        })",
+                        "",
+                        "#list commits",
+                        "contributors = set()",
+                        "raw['commits'] = {}",
+                        "for commit in Repository(url).traverse_commits():",
+                        "    sha = commit.hash",
+                        "    raw['commits'][sha] = {}",
+                        "    if commit.lines != 0:",
+                        "        contributors.add(commit.author.name)",
+                        "        raw['commits'][sha].update({",
+                        "            'author': commit.author.name,",
+                        "            'msg': commit.msg,",
+                        "            'date': commit.committer_date.strftime('%xT%X'),",
+                        "            'added': commit.insertions,",
+                        "            'parents': commit.parents,",
+                        "            \"deleted\": commit.deletions,",
+                        "            'modified_files': {}",
+                        "        })",
+                        "        for file in commit.modified_files:",
+                        "            if file.nloc == None:",
+                        "                continue",
+                        "            name = file.filename",
+                        "            raw['commits'][sha]['modified_files'][name] = {}",
+                        "            raw[\"commits\"][sha]['modified_files'][name].update({",
+                        "                'type': file.change_type.name,",
+                        "                'added': file.added_lines,",
+                        "                'deleted': file.deleted_lines,",
+                        "                'loc': file.nloc,",
+                        "                'content': file.content,",
+                        "                'diff': file.diff_parsed,",
+                        "            })",
+                        "        ",
+                        "        if raw['commits'][sha]['modified_files'] == {}:",
+                        "            raw['commits'].popitem()",
+                        "            ",
+                        "raw['contributors'] = list(contributors)",
+                        "f = open(f'{newpath}{repo}_raw.json', 'w')",
+                        "f.write(json.dumps(raw, indent= 4))",
+                        "    ",
+                        "",
+                        "\"\"\"",
+                        "extract ",
+                        "\"\"\"",
+                        "_files_ = {}",
+                        "",
+                        "for sha, commit in raw['commits'].items(): ",
+                        "    dev = raw['author']",
+                        "    cur_date = datetime.datetime.strptime(commit['date'], '%xT%X')",
+                        "",
+                        "    for name, file in commit['modified_files'].items():",
+                        "        if _files_.get(name) ==  None:",
+                        "            _files_[name] = {}",
+                        "",
+                        "        log = _files_[name].keys()",
+                        "        NUC = set()",
+                        "",
+                        "        if _files_[name].get(sha) == None:",
+                        "            _files_[name][sha] = {",
+                        "                'loc_bf': 0,",
+                        "                'dev': [],",
+                        "                'date': commit['date'],",
+                        "                'interval': 0,",
+                        "                'NUC': NUC",
+                        "            }",
+                        "",
+                        "        if len(log) > 2:",
+                        "            dad = list(log)[-2]",
+                        "            last_date = datetime.datetime.strptime(_files_[name][dad]['date'], '%xT%X')",
+                        "            ",
+                        "            _files_[name][sha]['interval'] = (cur_date - last_date).total_seconds()",
+                        "            _files_[name][sha]['loc_bf'] = raw['commits'][dad]['modified_files'][name]['loc']",
+                        "",
+                        "        for s in log:",
+                        "            NUC.add(s)",
+                        "        NUC.discard(sha)",
+                        "        ",
+                        "        if _files_[name][sha]['dev'].count(dev) == 0:",
+                        "            _files_[name][sha]['dev'].append(dev)",
+                        " ",
+                        "",
+                        "ext = {}",
+                        "pp_category = ['fix', 'patch', 'defect', 'bug']",
+                        "",
+                        "for sha, commit in raw['commits'].items():",
+                        "    ext[sha] = {}",
+                        "    ext[sha].update({",
+                        "        'total_added': commit['added'],",
+                        "        'total_deleted': commit['deleted'],",
+                        "        'EXP': 0,",
+                        "        'NUC': 0,",
+                        "        'total_dev': 0,",
+                        "        'avg_interval': 0,",
+                        "        'modified_files': {},",
+                        "        'purpose': []",
+                        "    })",
+                        "",
+                        "    for pp in pp_category:",
+                        "        if commit['msg'].find(pp) != -1:",
+                        "            ext[sha]['purpose'].append(pp)",
+                        "    if len(ext[sha]['purpose']) == 0:",
+                        "        ext[sha]['purpose'].append('other')",
+                        "",
+                        "    AGE = 0",
+                        "    NDEV = set()",
+                        "    NUC = set()",
+                        "",
+                        "    for name, file in commit['modified_files'].items():",
+                        "        AGE += _files_[name][sha]['interval']",
+                        "        for dev in _files_[name][sha]['dev']:",
+                        "            NDEV.add(dev)",
+                        "",
+                        "        ext[sha]['modified_files'][name] = {}",
+                        "        ext[sha]['modified_files'][name].update({",
+                        "            'LT': _files_[name][sha]['loc_bf'], ",
+                        "            'NDEV': len(_files_[name][sha]['dev']),",
+                        "        })",
+                        "        NUC.update(_files_[name][sha]['NUC'])",
+                        "    ",
+                        "    ext[sha]['avg_interval'] = AGE / len(commit['modified_files'].keys())",
+                        "    ext[sha]['total_dev'] = len(NDEV)",
+                        "    ext[sha]['NUC'] = len(NUC)",
+                        "",
+                        "_exp_ = {}",
+                        "for dev in raw['contributors']:",
+                        "    _exp_[dev] = 0",
+                        "for sha, commit in raw['commits'].items():",
+                        "    dev = commit['author']",
+                        "    ext[sha]['EXP'] = _exp_[dev]",
+                        "    _exp_[dev]+=1",
+                        "",
+                        "",
+                        "f = open(f'{newpath}{repo}_ext.json', 'w')",
+                        "f.write(json.dumps(ext, indent= 4))",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "diff": {
+                        "added": [
+                            [
+                                5,
+                                "import re"
+                            ],
+                            [
+                                12,
+                                "url = 'https://github.com/Mr-Duo/crawl-git'"
+                            ],
+                            [
+                                13,
+                                "newpath = './Data/'"
+                            ],
+                            [
+                                14,
+                                "if not os.path.exists(newpath):"
+                            ],
+                            [
+                                15,
+                                "    os.makedirs(newpath)"
+                            ],
+                            [
+                                68,
+                                "contributors = set()"
+                            ],
+                            [
+                                69,
+                                "raw['commits'] = {}"
+                            ],
+                            [
+                                71,
+                                "    sha = commit.hash"
+                            ],
+                            [
+                                72,
+                                "    raw['commits'][sha] = {}"
+                            ],
+                            [
+                                74,
+                                "        contributors.add(commit.author.name)"
+                            ],
+                            [
+                                75,
+                                "        raw['commits'][sha].update({"
+                            ],
+                            [
+                                76,
+                                "            'author': commit.author.name,"
+                            ],
+                            [
+                                82,
+                                "            'modified_files': {}"
+                            ],
+                            [
+                                87,
+                                "            name = file.filename"
+                            ],
+                            [
+                                88,
+                                "            raw['commits'][sha]['modified_files'][name] = {}"
+                            ],
+                            [
+                                89,
+                                "            raw[\"commits\"][sha]['modified_files'][name].update({"
+                            ],
+                            [
+                                94,
+                                "                'content': file.content,"
+                            ],
+                            [
+                                95,
+                                "                'diff': file.diff_parsed,"
+                            ],
+                            [
+                                97,
+                                ""
+                            ],
+                            [
+                                98,
+                                "        if raw['commits'][sha]['modified_files'] == {}:"
+                            ],
+                            [
+                                99,
+                                "            raw['commits'].popitem()"
+                            ],
+                            [
+                                100,
+                                ""
+                            ],
+                            [
+                                101,
+                                "raw['contributors'] = list(contributors)"
+                            ],
+                            [
+                                102,
+                                "f = open(f'{newpath}{repo}_raw.json', 'w')"
+                            ],
+                            [
+                                109,
+                                "_files_ = {}"
+                            ],
+                            [
+                                110,
+                                ""
+                            ],
+                            [
+                                111,
+                                "for sha, commit in raw['commits'].items():"
+                            ],
+                            [
+                                112,
+                                "    dev = raw['author']"
+                            ],
+                            [
+                                113,
+                                "    cur_date = datetime.datetime.strptime(commit['date'], '%xT%X')"
+                            ],
+                            [
+                                114,
+                                ""
+                            ],
+                            [
+                                115,
+                                "    for name, file in commit['modified_files'].items():"
+                            ],
+                            [
+                                116,
+                                "        if _files_.get(name) ==  None:"
+                            ],
+                            [
+                                117,
+                                "            _files_[name] = {}"
+                            ],
+                            [
+                                118,
+                                ""
+                            ],
+                            [
+                                119,
+                                "        log = _files_[name].keys()"
+                            ],
+                            [
+                                120,
+                                "        NUC = set()"
+                            ],
+                            [
+                                121,
+                                ""
+                            ],
+                            [
+                                122,
+                                "        if _files_[name].get(sha) == None:"
+                            ],
+                            [
+                                123,
+                                "            _files_[name][sha] = {"
+                            ],
+                            [
+                                124,
+                                "                'loc_bf': 0,"
+                            ],
+                            [
+                                125,
+                                "                'dev': [],"
+                            ],
+                            [
+                                126,
+                                "                'date': commit['date'],"
+                            ],
+                            [
+                                127,
+                                "                'interval': 0,"
+                            ],
+                            [
+                                128,
+                                "                'NUC': NUC"
+                            ],
+                            [
+                                129,
+                                "            }"
+                            ],
+                            [
+                                130,
+                                ""
+                            ],
+                            [
+                                131,
+                                "        if len(log) > 2:"
+                            ],
+                            [
+                                132,
+                                "            dad = list(log)[-2]"
+                            ],
+                            [
+                                133,
+                                "            last_date = datetime.datetime.strptime(_files_[name][dad]['date'], '%xT%X')"
+                            ],
+                            [
+                                134,
+                                ""
+                            ],
+                            [
+                                135,
+                                "            _files_[name][sha]['interval'] = (cur_date - last_date).total_seconds()"
+                            ],
+                            [
+                                136,
+                                "            _files_[name][sha]['loc_bf'] = raw['commits'][dad]['modified_files'][name]['loc']"
+                            ],
+                            [
+                                137,
+                                ""
+                            ],
+                            [
+                                138,
+                                "        for s in log:"
+                            ],
+                            [
+                                139,
+                                "            NUC.add(s)"
+                            ],
+                            [
+                                140,
+                                "        NUC.discard(sha)"
+                            ],
+                            [
+                                141,
+                                ""
+                            ],
+                            [
+                                142,
+                                "        if _files_[name][sha]['dev'].count(dev) == 0:"
+                            ],
+                            [
+                                143,
+                                "            _files_[name][sha]['dev'].append(dev)"
+                            ],
+                            [
+                                144,
+                                ""
+                            ],
+                            [
+                                146,
+                                "ext = {}"
+                            ],
+                            [
+                                147,
+                                "pp_category = ['fix', 'patch', 'defect', 'bug']"
+                            ],
+                            [
+                                148,
+                                ""
+                            ],
+                            [
+                                149,
+                                "for sha, commit in raw['commits'].items():"
+                            ],
+                            [
+                                150,
+                                "    ext[sha] = {}"
+                            ],
+                            [
+                                151,
+                                "    ext[sha].update({"
+                            ],
+                            [
+                                152,
+                                "        'total_added': commit['added'],"
+                            ],
+                            [
+                                153,
+                                "        'total_deleted': commit['deleted'],"
+                            ],
+                            [
+                                154,
+                                "        'EXP': 0,"
+                            ],
+                            [
+                                155,
+                                "        'NUC': 0,"
+                            ],
+                            [
+                                156,
+                                "        'total_dev': 0,"
+                            ],
+                            [
+                                157,
+                                "        'avg_interval': 0,"
+                            ],
+                            [
+                                158,
+                                "        'modified_files': {},"
+                            ],
+                            [
+                                159,
+                                "        'purpose': []"
+                            ],
+                            [
+                                160,
+                                "    })"
+                            ],
+                            [
+                                161,
+                                ""
+                            ],
+                            [
+                                162,
+                                "    for pp in pp_category:"
+                            ],
+                            [
+                                163,
+                                "        if commit['msg'].find(pp) != -1:"
+                            ],
+                            [
+                                164,
+                                "            ext[sha]['purpose'].append(pp)"
+                            ],
+                            [
+                                165,
+                                "    if len(ext[sha]['purpose']) == 0:"
+                            ],
+                            [
+                                166,
+                                "        ext[sha]['purpose'].append('other')"
+                            ],
+                            [
+                                167,
+                                ""
+                            ],
+                            [
+                                168,
+                                "    AGE = 0"
+                            ],
+                            [
+                                169,
+                                "    NDEV = set()"
+                            ],
+                            [
+                                170,
+                                "    NUC = set()"
+                            ],
+                            [
+                                171,
+                                ""
+                            ],
+                            [
+                                172,
+                                "    for name, file in commit['modified_files'].items():"
+                            ],
+                            [
+                                173,
+                                "        AGE += _files_[name][sha]['interval']"
+                            ],
+                            [
+                                174,
+                                "        for dev in _files_[name][sha]['dev']:"
+                            ],
+                            [
+                                175,
+                                "            NDEV.add(dev)"
+                            ],
+                            [
+                                176,
+                                ""
+                            ],
+                            [
+                                177,
+                                "        ext[sha]['modified_files'][name] = {}"
+                            ],
+                            [
+                                178,
+                                "        ext[sha]['modified_files'][name].update({"
+                            ],
+                            [
+                                179,
+                                "            'LT': _files_[name][sha]['loc_bf'],"
+                            ],
+                            [
+                                180,
+                                "            'NDEV': len(_files_[name][sha]['dev']),"
+                            ],
+                            [
+                                181,
+                                "        })"
+                            ],
+                            [
+                                182,
+                                "        NUC.update(_files_[name][sha]['NUC'])"
+                            ],
+                            [
+                                183,
+                                ""
+                            ],
+                            [
+                                184,
+                                "    ext[sha]['avg_interval'] = AGE / len(commit['modified_files'].keys())"
+                            ],
+                            [
+                                185,
+                                "    ext[sha]['total_dev'] = len(NDEV)"
+                            ],
+                            [
+                                186,
+                                "    ext[sha]['NUC'] = len(NUC)"
+                            ],
+                            [
+                                188,
+                                "_exp_ = {}"
+                            ],
+                            [
+                                189,
+                                "for dev in raw['contributors']:"
+                            ],
+                            [
+                                190,
+                                "    _exp_[dev] = 0"
+                            ],
+                            [
+                                191,
+                                "for sha, commit in raw['commits'].items():"
+                            ],
+                            [
+                                192,
+                                "    dev = commit['author']"
+                            ],
+                            [
+                                193,
+                                "    ext[sha]['EXP'] = _exp_[dev]"
+                            ],
+                            [
+                                194,
+                                "    _exp_[dev]+=1"
+                            ],
+                            [
+                                197,
+                                "f = open(f'{newpath}{repo}_ext.json', 'w')"
+                            ]
+                        ],
+                        "deleted": [
+                            [
+                                6,
+                                "from git import Repo"
+                            ],
+                            [
+                                12,
+                                "url = 'https://github.com/Grizzlazy/q_coverage'"
+                            ],
+                            [
+                                44,
+                                ""
+                            ],
+                            [
+                                45,
+                                "# list contributors"
+                            ],
+                            [
+                                46,
+                                "respond = requests.get(repo_res['contributors_url'])"
+                            ],
+                            [
+                                47,
+                                "if respond.status_code != 200:"
+                            ],
+                            [
+                                48,
+                                "    print('Cannot fetch data: ', respond.status_code)"
+                            ],
+                            [
+                                49,
+                                "    exit(1)"
+                            ],
+                            [
+                                50,
+                                "else:"
+                            ],
+                            [
+                                51,
+                                "    ctb_res = respond.json()"
+                            ],
+                            [
+                                53,
+                                "    for contributor in ctb_res:"
+                            ],
+                            [
+                                54,
+                                "        raw['contributors'].append(contributor['login'])"
+                            ],
+                            [
+                                75,
+                                "raw['commits'] = []"
+                            ],
+                            [
+                                78,
+                                "        raw['commits'].append({"
+                            ],
+                            [
+                                79,
+                                "            'sha': commit.hash,"
+                            ],
+                            [
+                                80,
+                                "            'committer': commit.author.name,"
+                            ],
+                            [
+                                86,
+                                "            'modified_files': []"
+                            ],
+                            [
+                                91,
+                                "            raw[\"commits\"][-1]['modified_files'].append({"
+                            ],
+                            [
+                                92,
+                                "                'name': file.filename,"
+                            ],
+                            [
+                                97,
+                                "                'source': file.source_code"
+                            ],
+                            [
+                                99,
+                                ""
+                            ],
+                            [
+                                100,
+                                ""
+                            ],
+                            [
+                                101,
+                                "f = open(f'{repo}_raw.json', 'w')"
+                            ],
+                            [
+                                108,
+                                "ext = {}"
+                            ],
+                            [
+                                110,
+                                "for commit in raw['commits']:"
+                            ],
+                            [
+                                111,
+                                "    _added = commit['added']"
+                            ],
+                            [
+                                112,
+                                "    _deleted = commit['deleted']"
+                            ],
+                            [
+                                114,
+                                "ext['added'] = _added"
+                            ],
+                            [
+                                117,
+                                "f = open(f'{repo}_ext.json', 'w')"
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        "cafe3d09b925ea6d441c8e9a05a68bd8f68f9be7": {
+            "committer": "Mr-Duo",
+            "msg": "Add files via upload",
+            "date": "01/20/24T13:57:20",
+            "added": 6,
+            "parents": [
+                "7020f51c62f7cbb64dd4d8ed63c261fbc53ae5d6"
+            ],
+            "deleted": 5,
+            "modified_files": {
+                "main.py": {
+                    "type": "MODIFY",
+                    "added": 6,
+                    "deleted": 5,
+                    "loc": 163,
+                    "content": [
+                        "import os, sys",
+                        "import requests",
+                        "import json",
+                        "import datetime",
+                        "import re",
+                        "from pydriller import Repository",
+                        "",
+                        "'''",
+                        "Giao di\u1ec7n d\u00f2ng l\u1ec7nh",
+                        "'''",
+                        "url = sys.argv[1]",
+                        "#url = 'https://github.com/Mr-Duo/crawl-git'",
+                        "newpath = './Data/' ",
+                        "if not os.path.exists(newpath):",
+                        "    os.makedirs(newpath)",
+                        "",
+                        "def get_last_char (path, ch):",
+                        "    loc1 = path.rfind(ch)",
+                        "    name = path[loc1+1: len(path)]",
+                        "    return loc1, name",
+                        "",
+                        "loc, extend = get_last_char(url, '.')",
+                        "if extend == 'git':",
+                        "    url = url[0: loc]",
+                        "",
+                        "loc, repo = get_last_char(url, '/')",
+                        "loc, owner = get_last_char(url[1: loc], '/')",
+                        "",
+                        "",
+                        "'''",
+                        "crawl",
+                        "'''",
+                        "#raw",
+                        "repo_url = f'https://api.github.com/repos/{owner}/{repo}'",
+                        "raw = {}",
+                        "print('Start Mining...')",
+                        "#lang + domain + owner",
+                        "respond = requests.get(repo_url)",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    repo_res = respond.json()",
+                        "    raw['language'] = repo_res['language']",
+                        "    raw['domain'] = repo_res['topics']",
+                        "    raw['author'] = repo_res['owner']['login']",
+                        "    raw['contributors'] = []",
+                        "",
+                        "#list issues",
+                        "loc = get_last_char(repo_res['issues_url'], '{')",
+                        "issues_url = repo_res['issues_url'][0: loc[0]]",
+                        "#print(issues_url)",
+                        "respond = requests.get(issues_url)",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    issues_res = respond.json()",
+                        "    raw['issues'] = []",
+                        "    for issue in issues_res:",
+                        "        raw['issues'].append({",
+                        "            'number': issue['number'],",
+                        "            'title': issue['title'],",
+                        "            'user': issue['user']['login']",
+                        "        })",
+                        "",
+                        "#list commits",
+                        "contributors = set()",
+                        "raw['commits'] = {}",
+                        "for commit in Repository(url).traverse_commits():",
+                        "    sha = commit.hash",
+                        "    raw['commits'][sha] = {}",
+                        "    if commit.lines != 0:",
+                        "        contributors.add(commit.author.name)",
+                        "        raw['commits'][sha].update({",
+                        "            'author': commit.author.name,",
+                        "            'msg': commit.msg,",
+                        "            'date': commit.committer_date.strftime('%xT%X'),",
+                        "            'added': commit.insertions,",
+                        "            'parents': commit.parents,",
+                        "            \"deleted\": commit.deletions,",
+                        "            'modified_files': {}",
+                        "        })",
+                        "        for file in commit.modified_files:",
+                        "            if file.nloc == None:",
+                        "                continue",
+                        "            name = file.filename",
+                        "            raw['commits'][sha]['modified_files'][name] = {}",
+                        "            raw[\"commits\"][sha]['modified_files'][name].update({",
+                        "                'type': file.change_type.name,",
+                        "                'added': file.added_lines,",
+                        "                'deleted': file.deleted_lines,",
+                        "                'loc': file.nloc,",
+                        "                'content': file.source_code,",
+                        "                'diff': file.diff_parsed,",
+                        "            })",
+                        "        ",
+                        "        if raw['commits'][sha]['modified_files'] == {}:",
+                        "            raw['commits'].popitem()",
+                        "            ",
+                        "raw['contributors'] = list(contributors)",
+                        "f = open(f'{newpath}{repo}_raw.json', 'w')",
+                        "f.write(json.dumps(raw, indent= 4))",
+                        "print('Mine completed!')    ",
+                        "",
+                        "\"\"\"",
+                        "extract ",
+                        "\"\"\"",
+                        "_files_ = {}",
+                        "",
+                        "for sha, commit in raw['commits'].items(): ",
+                        "    dev = raw['author']",
+                        "    cur_date = datetime.datetime.strptime(commit['date'], '%xT%X')",
+                        "",
+                        "    for name, file in commit['modified_files'].items():",
+                        "        if _files_.get(name) ==  None:",
+                        "            _files_[name] = {}",
+                        "",
+                        "        log = _files_[name].keys()",
+                        "        NUC = set()",
+                        "",
+                        "        if _files_[name].get(sha) == None:",
+                        "            _files_[name][sha] = {",
+                        "                'loc_bf': 0,",
+                        "                'dev': [],",
+                        "                'date': commit['date'],",
+                        "                'interval': 0,",
+                        "                'NUC': NUC",
+                        "            }",
+                        "",
+                        "        if len(log) > 2:",
+                        "            dad = list(log)[-2]",
+                        "            last_date = datetime.datetime.strptime(_files_[name][dad]['date'], '%xT%X')",
+                        "            ",
+                        "            _files_[name][sha]['interval'] = (cur_date - last_date).total_seconds()",
+                        "            _files_[name][sha]['loc_bf'] = raw['commits'][dad]['modified_files'][name]['loc']",
+                        "",
+                        "        for s in log:",
+                        "            NUC.add(s)",
+                        "        NUC.discard(sha)",
+                        "        ",
+                        "        if _files_[name][sha]['dev'].count(dev) == 0:",
+                        "            _files_[name][sha]['dev'].append(dev)",
+                        " ",
+                        "",
+                        "ext = {}",
+                        "pp_category = ['fix', 'patch', 'defect', 'bug']",
+                        "",
+                        "for sha, commit in raw['commits'].items():",
+                        "    ext[sha] = {}",
+                        "    ext[sha].update({",
+                        "        'total_added': commit['added'],",
+                        "        'total_deleted': commit['deleted'],",
+                        "        'EXP': 0,",
+                        "        'NUC': 0,",
+                        "        'total_dev': 0,",
+                        "        'avg_interval': 0,",
+                        "        'modified_files': {},",
+                        "        'purpose': []",
+                        "    })",
+                        "",
+                        "    for pp in pp_category:",
+                        "        if commit['msg'].find(pp) != -1:",
+                        "            ext[sha]['purpose'].append(pp)",
+                        "    if len(ext[sha]['purpose']) == 0:",
+                        "        ext[sha]['purpose'].append('other')",
+                        "",
+                        "    AGE = 0",
+                        "    NDEV = set()",
+                        "    NUC = set()",
+                        "",
+                        "    for name, file in commit['modified_files'].items():",
+                        "        AGE += _files_[name][sha]['interval']",
+                        "        for dev in _files_[name][sha]['dev']:",
+                        "            NDEV.add(dev)",
+                        "",
+                        "        ext[sha]['modified_files'][name] = {}",
+                        "        ext[sha]['modified_files'][name].update({",
+                        "            'LT': _files_[name][sha]['loc_bf'], ",
+                        "            'NDEV': len(_files_[name][sha]['dev']),",
+                        "        })",
+                        "        NUC.update(_files_[name][sha]['NUC'])",
+                        "    ",
+                        "    ext[sha]['avg_interval'] = AGE / len(commit['modified_files'].keys())",
+                        "    ext[sha]['total_dev'] = len(NDEV)",
+                        "    ext[sha]['NUC'] = len(NUC)",
+                        "",
+                        "_exp_ = {}",
+                        "for dev in raw['contributors']:",
+                        "    _exp_[dev] = 0",
+                        "for sha, commit in raw['commits'].items():",
+                        "    dev = commit['author']",
+                        "    ext[sha]['EXP'] = _exp_[dev]",
+                        "    _exp_[dev]+=1",
+                        "",
+                        "",
+                        "f = open(f'{newpath}{repo}_ext.json', 'w')",
+                        "f.write(json.dumps(ext, indent= 4))",
+                        "print('Extract completed!')",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "diff": {
+                        "added": [
+                            [
+                                11,
+                                "url = sys.argv[1]"
+                            ],
+                            [
+                                12,
+                                "#url = 'https://github.com/Mr-Duo/crawl-git'"
+                            ],
+                            [
+                                36,
+                                "print('Start Mining...')"
+                            ],
+                            [
+                                94,
+                                "                'content': file.source_code,"
+                            ],
+                            [
+                                104,
+                                "print('Mine completed!')"
+                            ],
+                            [
+                                199,
+                                "print('Extract completed!')"
+                            ]
+                        ],
+                        "deleted": [
+                            [
+                                11,
+                                "#url = sys.argv[1]"
+                            ],
+                            [
+                                12,
+                                "url = 'https://github.com/Mr-Duo/crawl-git'"
+                            ],
+                            [
+                                36,
+                                ""
+                            ],
+                            [
+                                94,
+                                "                'content': file.content,"
+                            ],
+                            [
+                                104,
+                                ""
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        "96d1d163d5e8c81512be29008571477c008e28f8": {
+            "committer": "Mr-Duo",
+            "msg": "Add files via upload",
+            "date": "01/21/24T02:15:26",
+            "added": 14,
+            "parents": [
+                "cafe3d09b925ea6d441c8e9a05a68bd8f68f9be7"
+            ],
+            "deleted": 3,
+            "modified_files": {
+                "main.py": {
+                    "type": "MODIFY",
+                    "added": 14,
+                    "deleted": 3,
+                    "loc": 172,
+                    "content": [
+                        "import os, sys",
+                        "import requests",
+                        "import json",
+                        "import datetime",
+                        "import re",
+                        "from pydriller import Repository",
+                        "",
+                        "'''",
+                        "Giao di\u1ec7n d\u00f2ng l\u1ec7nh",
+                        "'''",
+                        "url = sys.argv[1]",
+                        "#url = 'https://github.com/Mr-Duo/crawl-git'",
+                        "newpath = './Data/' ",
+                        "if not os.path.exists(newpath):",
+                        "    os.makedirs(newpath)",
+                        "",
+                        "def get_last_char (path, ch):",
+                        "    loc1 = path.rfind(ch)",
+                        "    name = path[loc1+1: len(path)]",
+                        "    return loc1, name",
+                        "",
+                        "loc, extend = get_last_char(url, '.')",
+                        "if extend == 'git':",
+                        "    url = url[0: loc]",
+                        "",
+                        "loc, repo = get_last_char(url, '/')",
+                        "loc, owner = get_last_char(url[1: loc], '/')",
+                        "",
+                        "",
+                        "'''",
+                        "crawl",
+                        "'''",
+                        "#raw",
+                        "repo_url = f'https://api.github.com/repos/{owner}/{repo}'",
+                        "raw = {}",
+                        "print('Start Mining...')",
+                        "#lang + domain + owner",
+                        "respond = requests.get(repo_url)",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    repo_res = respond.json()",
+                        "    raw['language'] = repo_res['language']",
+                        "    raw['domain'] = repo_res['topics']",
+                        "    raw['author'] = repo_res['owner']['login']",
+                        "    raw['contributors'] = []",
+                        "",
+                        "#list issues",
+                        "loc = get_last_char(repo_res['issues_url'], '{')",
+                        "issues_url = repo_res['issues_url'][0: loc[0]]",
+                        "#print(issues_url)",
+                        "respond = requests.get(issues_url)",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    issues_res = respond.json()",
+                        "    raw['issues'] = []",
+                        "    for issue in issues_res:",
+                        "        raw['issues'].append({",
+                        "            'number': issue['number'],",
+                        "            'title': issue['title'],",
+                        "            'user': issue['user']['login']",
+                        "        })",
+                        "",
+                        "#list commits",
+                        "contributors = set()",
+                        "raw['commits'] = {}",
+                        "for commit in Repository(url).traverse_commits():",
+                        "    sha = commit.hash",
+                        "    raw['commits'][sha] = {}",
+                        "    if commit.lines != 0:",
+                        "        contributors.add(commit.author.name)",
+                        "        raw['commits'][sha].update({",
+                        "            'author': commit.author.name,",
+                        "            'msg': commit.msg,",
+                        "            'date': commit.committer_date.strftime('%xT%X'),",
+                        "            'added': commit.insertions,",
+                        "            'parents': commit.parents,",
+                        "            \"deleted\": commit.deletions,",
+                        "            'modified_files': {}",
+                        "        })",
+                        "        for file in commit.modified_files:",
+                        "            if file.language_supported == False:",
+                        "                continue",
+                        "            if file.nloc == None:",
+                        "                continue",
+                        "            name = file.filename",
+                        "            raw['commits'][sha]['modified_files'][name] = {}",
+                        "            raw[\"commits\"][sha]['modified_files'][name].update({",
+                        "                'type': file.change_type.name,",
+                        "                'added': file.added_lines,",
+                        "                'deleted': file.deleted_lines,",
+                        "                'loc': file.nloc,",
+                        "                'content': file.source_code,",
+                        "                'diff': file.diff_parsed,",
+                        "            })",
+                        "            ",
+                        "",
+                        "        if raw['commits'][sha]['modified_files'] == {}:",
+                        "            raw['commits'].popitem()",
+                        "            ",
+                        "raw['contributors'] = list(contributors)",
+                        "f = open(f'{newpath}{repo}_raw.json', 'w')",
+                        "f.write(json.dumps(raw, indent= 4))",
+                        "print('Mine completed!')    ",
+                        "",
+                        "\"\"\"",
+                        "extract ",
+                        "\"\"\"",
+                        "print('Start Extracting!')",
+                        "_files_ = {}",
+                        "",
+                        "for sha, commit in raw['commits'].items():",
+                        "    if len(commit.keys()) == 0:",
+                        "        continue ",
+                        "    dev = raw['author']",
+                        "    cur_date = datetime.datetime.strptime(commit['date'], '%xT%X')",
+                        "",
+                        "    for name, file in commit['modified_files'].items():",
+                        "        if _files_.get(name) ==  None:",
+                        "            _files_[name] = {}",
+                        "",
+                        "        log = _files_[name].keys()",
+                        "        NUC = set()",
+                        "",
+                        "        if _files_[name].get(sha) == None:",
+                        "            _files_[name][sha] = {",
+                        "                'loc_bf': 0,",
+                        "                'dev': [],",
+                        "                'date': commit['date'],",
+                        "                'interval': 0,",
+                        "                'NUC': NUC",
+                        "            }",
+                        "",
+                        "        if len(log) > 2:",
+                        "            dad = list(log)[-2]",
+                        "            last_date = datetime.datetime.strptime(_files_[name][dad]['date'], '%xT%X')",
+                        "            ",
+                        "            _files_[name][sha]['interval'] = (cur_date - last_date).total_seconds()",
+                        "            _files_[name][sha]['loc_bf'] = raw['commits'][dad]['modified_files'][name]['loc']",
+                        "",
+                        "        for s in log:",
+                        "            NUC.add(s)",
+                        "        NUC.discard(sha)",
+                        "        ",
+                        "        if _files_[name][sha]['dev'].count(dev) == 0:",
+                        "            _files_[name][sha]['dev'].append(dev)",
+                        " ",
+                        "",
+                        "ext = {}",
+                        "pp_category = ['fix', 'patch', 'defect', 'bug', 'add']",
+                        "",
+                        "for sha, commit in raw['commits'].items():",
+                        "    if len(commit.keys()) == 0:",
+                        "        continue ",
+                        "    ext[sha] = {}",
+                        "    ext[sha].update({",
+                        "        'total_added': commit['added'],",
+                        "        'total_deleted': commit['deleted'],",
+                        "        'EXP': 0,",
+                        "        'NUC': 0,",
+                        "        'total_dev': 0,",
+                        "        'avg_interval': 0,",
+                        "        'modified_files': {},",
+                        "        'purpose': []",
+                        "    })",
+                        "",
+                        "    for pp in pp_category:",
+                        "        if commit['msg'].find(pp) != -1:",
+                        "            ext[sha]['purpose'].append(pp)",
+                        "    if len(ext[sha]['purpose']) == 0:",
+                        "        ext[sha]['purpose'].append('other')",
+                        "",
+                        "    AGE = 0",
+                        "    NDEV = set()",
+                        "    NUC = set()",
+                        "",
+                        "    for name, file in commit['modified_files'].items():",
+                        "        AGE += _files_[name][sha]['interval']",
+                        "        for dev in _files_[name][sha]['dev']:",
+                        "            NDEV.add(dev)",
+                        "",
+                        "        ext[sha]['modified_files'][name] = {}",
+                        "        ext[sha]['modified_files'][name].update({",
+                        "            'LT': _files_[name][sha]['loc_bf'], ",
+                        "            'NDEV': len(_files_[name][sha]['dev']),",
+                        "        })",
+                        "        NUC.update(_files_[name][sha]['NUC'])",
+                        "    ",
+                        "    ext[sha]['avg_interval'] = AGE / len(commit['modified_files'].keys())",
+                        "    ext[sha]['total_dev'] = len(NDEV)",
+                        "    ext[sha]['NUC'] = len(NUC)",
+                        "",
+                        "_exp_ = {}",
+                        "for dev in raw['contributors']:",
+                        "    _exp_[dev] = 0",
+                        "for sha, commit in raw['commits'].items():",
+                        "    if len(commit.keys()) == 0:",
+                        "        continue ",
+                        "    dev = commit['author']",
+                        "    ext[sha]['EXP'] = _exp_[dev]",
+                        "    _exp_[dev]+=1",
+                        "",
+                        "",
+                        "",
+                        "f = open(f'{newpath}{repo}_ext.json', 'w')",
+                        "f.write(json.dumps(ext, indent= 4))",
+                        "print('Extract completed!')",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "diff": {
+                        "added": [
+                            [
+                                85,
+                                "            if file.language_supported == False:"
+                            ],
+                            [
+                                86,
+                                "                continue"
+                            ],
+                            [
+                                99,
+                                ""
+                            ],
+                            [
+                                100,
+                                ""
+                            ],
+                            [
+                                112,
+                                "print('Start Extracting!')"
+                            ],
+                            [
+                                115,
+                                "for sha, commit in raw['commits'].items():"
+                            ],
+                            [
+                                116,
+                                "    if len(commit.keys()) == 0:"
+                            ],
+                            [
+                                117,
+                                "        continue"
+                            ],
+                            [
+                                153,
+                                "pp_category = ['fix', 'patch', 'defect', 'bug', 'add']"
+                            ],
+                            [
+                                156,
+                                "    if len(commit.keys()) == 0:"
+                            ],
+                            [
+                                157,
+                                "        continue"
+                            ],
+                            [
+                                200,
+                                "    if len(commit.keys()) == 0:"
+                            ],
+                            [
+                                201,
+                                "        continue"
+                            ],
+                            [
+                                207,
+                                ""
+                            ]
+                        ],
+                        "deleted": [
+                            [
+                                97,
+                                ""
+                            ],
+                            [
+                                111,
+                                "for sha, commit in raw['commits'].items():"
+                            ],
+                            [
+                                147,
+                                "pp_category = ['fix', 'patch', 'defect', 'bug']"
+                            ]
+                        ]
+                    }
+                }
+            }
+        },
+        "816ebf27a3a75c5298eb9988c0a77b91445525e3": {
+            "committer": "Mr-Duo",
+            "msg": "Add files via upload",
+            "date": "02/03/24T20:20:46",
+            "added": 20,
+            "parents": [
+                "96d1d163d5e8c81512be29008571477c008e28f8"
+            ],
+            "deleted": 23,
+            "modified_files": {
+                "main.py": {
+                    "type": "MODIFY",
+                    "added": 20,
+                    "deleted": 23,
+                    "loc": 167,
+                    "content": [
+                        "import os, sys",
+                        "import requests",
+                        "import json",
+                        "import datetime",
+                        "import re",
+                        "from pydriller import Repository",
+                        "",
+                        "'''",
+                        "Giao di\u1ec7n d\u00f2ng l\u1ec7nh",
+                        "'''",
+                        "url = sys.argv[1]",
+                        "#url = 'https://github.com/Mr-Duo/crawl-git'",
+                        "newpath = './Data/' ",
+                        "if not os.path.exists(newpath):",
+                        "    os.makedirs(newpath)",
+                        "",
+                        "def get_last_char (path, ch):",
+                        "    loc1 = path.rfind(ch)",
+                        "    name = path[loc1+1: len(path)]",
+                        "    return loc1, name",
+                        "",
+                        "loc, extend = get_last_char(url, '.')",
+                        "if extend == 'git':",
+                        "    url = url[0: loc]",
+                        "",
+                        "loc, repo = get_last_char(url, '/')",
+                        "loc, owner = get_last_char(url[1: loc], '/')",
+                        "",
+                        "",
+                        "'''",
+                        "crawl",
+                        "'''",
+                        "#raw",
+                        "repo_url = f'https://api.github.com/repos/{owner}/{repo}'",
+                        "raw = {}",
+                        "print('Mining...')",
+                        "#lang + domain + owner",
+                        "respond = requests.get(repo_url)",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    repo_res = respond.json()",
+                        "    raw['language'] = repo_res['language']",
+                        "    raw['domain'] = repo_res['topics']",
+                        "    raw['author'] = repo_res['owner']['login']",
+                        "    raw['contributors'] = []",
+                        "",
+                        "#list issues",
+                        "loc = get_last_char(repo_res['issues_url'], '{')",
+                        "issues_url = repo_res['issues_url'][0: loc[0]]",
+                        "#print(issues_url)",
+                        "respond = requests.get(issues_url)",
+                        "if respond.status_code != 200:",
+                        "    print('Cannot fetch data: ', respond.status_code)",
+                        "    exit(1)",
+                        "else:",
+                        "    issues_res = respond.json()",
+                        "    raw['issues'] = []",
+                        "    for issue in issues_res:",
+                        "        raw['issues'].append({",
+                        "            'number': issue['number'],",
+                        "            'title': issue['title'],",
+                        "            'user': issue['user']['login']",
+                        "        })",
+                        "",
+                        "#list commits",
+                        "contributors = set()",
+                        "raw['commits'] = {}",
+                        "for commit in Repository(url).traverse_commits():",
+                        "    if commit.lines != 0:",
+                        "        sha = commit.hash",
+                        "        raw['commits'][sha] = {}",
+                        "        contributors.add(commit.author.name)",
+                        "        raw['commits'][sha].update({",
+                        "            'committer': commit.author.name,",
+                        "            'msg': commit.msg,",
+                        "            'date': commit.committer_date.strftime('%xT%X'),",
+                        "            'added': commit.insertions,",
+                        "            'parents': commit.parents,",
+                        "            \"deleted\": commit.deletions,",
+                        "            'modified_files': {}",
+                        "        })",
+                        "        for file in commit.modified_files:",
+                        "            if file.language_supported == False:",
+                        "                continue",
+                        "            if file.nloc == None:",
+                        "                continue",
+                        "            name = file.filename",
+                        "            raw['commits'][sha]['modified_files'][name] = {}",
+                        "            raw[\"commits\"][sha]['modified_files'][name].update({",
+                        "                'type': file.change_type.name,",
+                        "                'added': file.added_lines,",
+                        "                'deleted': file.deleted_lines,",
+                        "                'loc': file.nloc,",
+                        "                'content': file.source_code.split('\\r\\n'),",
+                        "                'diff': file.diff_parsed,",
+                        "            })",
+                        "",
+                        "        if len(raw['commits'][sha]['modified_files']) == 0:",
+                        "            raw['commits'].pop(sha)",
+                        "            ",
+                        "            ",
+                        "raw['contributors'] = list(contributors)",
+                        "f = open(f'{newpath}{repo}_raw.json', 'w')",
+                        "f.write(json.dumps(raw, indent= 4))",
+                        "print('Mine completed!')    ",
+                        "",
+                        "\"\"\"",
+                        "extract ",
+                        "\"\"\"",
+                        "",
+                        "print('Extracting...')",
+                        "_files_ = {}",
+                        "",
+                        "for sha, commit in raw['commits'].items():",
+                        "    if len(commit.keys()) == 0:",
+                        "        continue ",
+                        "    dev = commit['committer']",
+                        "    cur_date = datetime.datetime.strptime(commit['date'], '%xT%X')",
+                        "",
+                        "    for name, file in commit['modified_files'].items():",
+                        "        if _files_.get(name) ==  None:",
+                        "            _files_[name] = {",
+                        "                'dev': set()",
+                        "            }",
+                        "",
+                        "        log = _files_[name].keys()",
+                        "        NUC = set()",
+                        "",
+                        "        if _files_[name].get(sha) == None:",
+                        "            _files_[name][sha] = {",
+                        "                'loc_bf': 0,",
+                        "                'dev': set(),",
+                        "                'date': commit['date'],",
+                        "                'interval': 0,",
+                        "                'NUC': NUC",
+                        "            }",
+                        "",
+                        "        if len(log) > 2:",
+                        "            dad = list(log)[-2]",
+                        "            last_date = datetime.datetime.strptime(_files_[name][dad]['date'], '%xT%X')",
+                        "            ",
+                        "            _files_[name][sha]['interval'] = (cur_date - last_date).total_seconds()",
+                        "            _files_[name][sha]['loc_bf'] = raw['commits'][dad]['modified_files'][name]['loc']",
+                        "            _files_[name][sha]['dev'] =  _files_[name][dad]['dev']",
+                        "",
+                        "        for s in log:",
+                        "            NUC.add(s)",
+                        "        NUC.discard(sha)",
+                        "        ",
+                        "        _files_[name][sha]['dev'].add(dev)",
+                        "        ",
+                        " ",
+                        "",
+                        "ext = {}",
+                        "",
+                        "for sha, commit in raw['commits'].items():",
+                        "    if len(commit.keys()) == 0:",
+                        "        continue ",
+                        "    ext[sha] = {}",
+                        "    ext[sha].update({",
+                        "        'total_added': commit['added'],",
+                        "        'total_deleted': commit['deleted'],",
+                        "        'EXP': 0,",
+                        "        'NUC': 0,",
+                        "        'total_dev': 0,",
+                        "        'avg_interval': 0,",
+                        "        'modified_files': {},",
+                        "    })",
+                        "",
+                        "    AGE = 0",
+                        "    NDEV = set()",
+                        "    NUC = set()",
+                        "",
+                        "    for name, file in commit['modified_files'].items():",
+                        "        AGE += _files_[name][sha]['interval']",
+                        "        for dev in _files_[name][sha]['dev']:",
+                        "            NDEV.add(dev)",
+                        "",
+                        "        ext[sha]['modified_files'][name] = {}",
+                        "        ext[sha]['modified_files'][name].update({",
+                        "            'LT': _files_[name][sha]['loc_bf'], ",
+                        "            'NDEV': len(_files_[name][sha]['dev']),",
+                        "        })",
+                        "        NUC.update(_files_[name][sha]['NUC'])",
+                        "    ",
+                        "    ext[sha]['avg_interval'] = AGE / len(commit['modified_files'].keys())",
+                        "    ext[sha]['total_dev'] = len(NDEV)",
+                        "    ext[sha]['NUC'] = len(NUC)",
+                        "",
+                        "_exp_ = {}",
+                        "for dev in raw['contributors']:",
+                        "    _exp_[dev] = 0",
+                        "for sha, commit in raw['commits'].items():",
+                        "    if len(commit.keys()) == 0:",
+                        "        continue ",
+                        "    dev = commit['committer']",
+                        "    ext[sha]['EXP'] = _exp_[dev]",
+                        "    _exp_[dev]+=1",
+                        "",
+                        "",
+                        "",
+                        "f = open(f'{newpath}{repo}_ext.json', 'w')",
+                        "f.write(json.dumps(ext, indent= 4))",
+                        "print('Extract completed!')",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "diff": {
+                        "added": [
+                            [
+                                36,
+                                "print('Mining...')"
+                            ],
+                            [
+                                72,
+                                "        sha = commit.hash"
+                            ],
+                            [
+                                73,
+                                "        raw['commits'][sha] = {}"
+                            ],
+                            [
+                                76,
+                                "            'committer': commit.author.name,"
+                            ],
+                            [
+                                96,
+                                "                'content': file.source_code.split('\\r\\n'),"
+                            ],
+                            [
+                                100,
+                                "        if len(raw['commits'][sha]['modified_files']) == 0:"
+                            ],
+                            [
+                                101,
+                                "            raw['commits'].pop(sha)"
+                            ],
+                            [
+                                102,
+                                ""
+                            ],
+                            [
+                                112,
+                                ""
+                            ],
+                            [
+                                113,
+                                "print('Extracting...')"
+                            ],
+                            [
+                                119,
+                                "    dev = commit['committer']"
+                            ],
+                            [
+                                124,
+                                "            _files_[name] = {"
+                            ],
+                            [
+                                125,
+                                "                'dev': set()"
+                            ],
+                            [
+                                126,
+                                "            }"
+                            ],
+                            [
+                                134,
+                                "                'dev': set(),"
+                            ],
+                            [
+                                146,
+                                "            _files_[name][sha]['dev'] =  _files_[name][dad]['dev']"
+                            ],
+                            [
+                                152,
+                                "        _files_[name][sha]['dev'].add(dev)"
+                            ],
+                            [
+                                153,
+                                ""
+                            ],
+                            [
+                                198,
+                                "    dev = commit['committer']"
+                            ],
+                            [
+                                209,
+                                ""
+                            ]
+                        ],
+                        "deleted": [
+                            [
+                                36,
+                                "print('Start Mining...')"
+                            ],
+                            [
+                                71,
+                                "    sha = commit.hash"
+                            ],
+                            [
+                                72,
+                                "    raw['commits'][sha] = {}"
+                            ],
+                            [
+                                76,
+                                "            'author': commit.author.name,"
+                            ],
+                            [
+                                96,
+                                "                'content': file.source_code,"
+                            ],
+                            [
+                                99,
+                                ""
+                            ],
+                            [
+                                101,
+                                "        if raw['commits'][sha]['modified_files'] == {}:"
+                            ],
+                            [
+                                102,
+                                "            raw['commits'].popitem()"
+                            ],
+                            [
+                                112,
+                                "print('Start Extracting!')"
+                            ],
+                            [
+                                118,
+                                "    dev = raw['author']"
+                            ],
+                            [
+                                123,
+                                "            _files_[name] = {}"
+                            ],
+                            [
+                                131,
+                                "                'dev': [],"
+                            ],
+                            [
+                                148,
+                                "        if _files_[name][sha]['dev'].count(dev) == 0:"
+                            ],
+                            [
+                                149,
+                                "            _files_[name][sha]['dev'].append(dev)"
+                            ],
+                            [
+                                153,
+                                "pp_category = ['fix', 'patch', 'defect', 'bug', 'add']"
+                            ],
+                            [
+                                167,
+                                "        'purpose': []"
+                            ],
+                            [
+                                170,
+                                "    for pp in pp_category:"
+                            ],
+                            [
+                                171,
+                                "        if commit['msg'].find(pp) != -1:"
+                            ],
+                            [
+                                172,
+                                "            ext[sha]['purpose'].append(pp)"
+                            ],
+                            [
+                                173,
+                                "    if len(ext[sha]['purpose']) == 0:"
+                            ],
+                            [
+                                174,
+                                "        ext[sha]['purpose'].append('other')"
+                            ],
+                            [
+                                175,
+                                ""
+                            ],
+                            [
+                                202,
+                                "    dev = commit['author']"
+                            ]
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,108 @@
+{
+    "9e0c3011769d872612538ae1fc879417ece5a564": {
+        "total_added": 658,
+        "total_deleted": 0,
+        "EXP": 0,
+        "NUC": 1,
+        "total_dev": 2,
+        "avg_interval": 0.0,
+        "modified_files": {
+            "main.py": {
+                "LT": 0,
+                "NDEV": 2
+            }
+        }
+    },
+    "66e6c999650753e9ee0b73e8caafeaa53396ae59": {
+        "total_added": 178,
+        "total_deleted": 260,
+        "EXP": 0,
+        "NUC": 2,
+        "total_dev": 2,
+        "avg_interval": 16458.333333333332,
+        "modified_files": {
+            "crawl.py": {
+                "LT": 0,
+                "NDEV": 1
+            },
+            "main.py": {
+                "LT": 75,
+                "NDEV": 2
+            },
+            "test.py": {
+                "LT": 0,
+                "NDEV": 1
+            }
+        }
+    },
+    "7aa8e34a74391f2ab0632a085dc7c0eb487bb994": {
+        "total_added": 16,
+        "total_deleted": 2,
+        "EXP": 1,
+        "NUC": 3,
+        "total_dev": 2,
+        "avg_interval": 149.0,
+        "modified_files": {
+            "main.py": {
+                "LT": 84,
+                "NDEV": 2
+            }
+        }
+    },
+    "f8d39660fce28a791180d79b60a38481afdcce77": {
+        "total_added": 109,
+        "total_deleted": 29,
+        "EXP": 1,
+        "NUC": 4,
+        "total_dev": 2,
+        "avg_interval": 801907.0,
+        "modified_files": {
+            "main.py": {
+                "LT": 93,
+                "NDEV": 2
+            }
+        }
+    },
+    "cafe3d09b925ea6d441c8e9a05a68bd8f68f9be7": {
+        "total_added": 6,
+        "total_deleted": 5,
+        "EXP": 2,
+        "NUC": 5,
+        "total_dev": 2,
+        "avg_interval": 72850.0,
+        "modified_files": {
+            "main.py": {
+                "LT": 160,
+                "NDEV": 2
+            }
+        }
+    },
+    "96d1d163d5e8c81512be29008571477c008e28f8": {
+        "total_added": 14,
+        "total_deleted": 3,
+        "EXP": 3,
+        "NUC": 6,
+        "total_dev": 2,
+        "avg_interval": 44286.0,
+        "modified_files": {
+            "main.py": {
+                "LT": 163,
+                "NDEV": 2
+            }
+        }
+    },
+    "816ebf27a3a75c5298eb9988c0a77b91445525e3": {
+        "total_added": 20,
+        "total_deleted": 23,
+        "EXP": 4,
+        "NUC": 7,
+        "total_dev": 2,
+        "avg_interval": 1188320.0,
+        "modified_files": {
+            "main.py": {
+                "LT": 172,
+                "NDEV": 2
+            }
+        }
+    }
+}
