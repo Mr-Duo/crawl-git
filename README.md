@@ -1,6 +1,3 @@
-Báo cáo CodeChange Tool
-
-I.	Chức năng
 1.	Giới thiệu
 Tool được xây dựng để mine và extract các thông tin về các commit và thay đổi về code trong commit đó trong một repository.
 Tool sử dụng công cụ PyDriller và Rest API của Github.
