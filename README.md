@@ -1,4 +1,4 @@
-1.	Giới thiệu
+1.	Giới thiệu\n
 Tool được xây dựng để mine và extract các thông tin về các commit và thay đổi về code trong commit đó trong một repository.
 Tool sử dụng công cụ PyDriller và Rest API của Github.
 2.	Cách sử dụng
