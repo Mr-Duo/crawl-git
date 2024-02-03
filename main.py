@@ -33,7 +33,7 @@ crawl
 #raw
 repo_url = f'https://api.github.com/repos/{owner}/{repo}'
 raw = {}
-print('Start Mining...')
+print('Mining...')
 #lang + domain + owner
 respond = requests.get(repo_url)
 if respond.status_code != 200:
@@ -68,12 +68,12 @@ else:
 contributors = set()
 raw['commits'] = {}
 for commit in Repository(url).traverse_commits():
-    sha = commit.hash
-    raw['commits'][sha] = {}
     if commit.lines != 0:
+        sha = commit.hash
+        raw['commits'][sha] = {}
         contributors.add(commit.author.name)
         raw['commits'][sha].update({
-            'author': commit.author.name,
+            'committer': commit.author.name,
             'msg': commit.msg,
             'date': commit.committer_date.strftime('%xT%X'),
             'added': commit.insertions,
@@ -93,13 +93,13 @@ for commit in Repository(url).traverse_commits():
                 'added': file.added_lines,
                 'deleted': file.deleted_lines,
                 'loc': file.nloc,
-                'content': file.source_code,
+                'content': file.source_code.split('\r\n'),
                 'diff': file.diff_parsed,
             })
-            
 
-        if raw['commits'][sha]['modified_files'] == {}:
-            raw['commits'].popitem()
+        if len(raw['commits'][sha]['modified_files']) == 0:
+            raw['commits'].pop(sha)
+            
             
 raw['contributors'] = list(contributors)
 f = open(f'{newpath}{repo}_raw.json', 'w')
@@ -109,18 +109,21 @@ print('Mine completed!')
 """
 extract 
 """
-print('Start Extracting!')
+
+print('Extracting...')
 _files_ = {}
 
 for sha, commit in raw['commits'].items():
     if len(commit.keys()) == 0:
         continue 
-    dev = raw['author']
+    dev = commit['committer']
     cur_date = datetime.datetime.strptime(commit['date'], '%xT%X')
 
     for name, file in commit['modified_files'].items():
         if _files_.get(name) ==  None:
-            _files_[name] = {}
+            _files_[name] = {
+                'dev': set()
+            }
 
         log = _files_[name].keys()
         NUC = set()
@@ -128,7 +131,7 @@ for sha, commit in raw['commits'].items():
         if _files_[name].get(sha) == None:
             _files_[name][sha] = {
                 'loc_bf': 0,
-                'dev': [],
+                'dev': set(),
                 'date': commit['date'],
                 'interval': 0,
                 'NUC': NUC
@@ -140,17 +143,17 @@ for sha, commit in raw['commits'].items():
             
             _files_[name][sha]['interval'] = (cur_date - last_date).total_seconds()
             _files_[name][sha]['loc_bf'] = raw['commits'][dad]['modified_files'][name]['loc']
+            _files_[name][sha]['dev'] =  _files_[name][dad]['dev']
 
         for s in log:
             NUC.add(s)
         NUC.discard(sha)
         
-        if _files_[name][sha]['dev'].count(dev) == 0:
-            _files_[name][sha]['dev'].append(dev)
+        _files_[name][sha]['dev'].add(dev)
+        
  
 
 ext = {}
-pp_category = ['fix', 'patch', 'defect', 'bug', 'add']
 
 for sha, commit in raw['commits'].items():
     if len(commit.keys()) == 0:
@@ -164,14 +167,7 @@ for sha, commit in raw['commits'].items():
         'total_dev': 0,
         'avg_interval': 0,
         'modified_files': {},
-        'purpose': []
     })
-
-    for pp in pp_category:
-        if commit['msg'].find(pp) != -1:
-            ext[sha]['purpose'].append(pp)
-    if len(ext[sha]['purpose']) == 0:
-        ext[sha]['purpose'].append('other')
 
     AGE = 0
     NDEV = set()
@@ -199,7 +195,7 @@ for dev in raw['contributors']:
 for sha, commit in raw['commits'].items():
     if len(commit.keys()) == 0:
         continue 
-    dev = commit['author']
+    dev = commit['committer']
     ext[sha]['EXP'] = _exp_[dev]
     _exp_[dev]+=1
 
@@ -208,5 +204,6 @@ for sha, commit in raw['commits'].items():
 f = open(f'{newpath}{repo}_ext.json', 'w')
 f.write(json.dumps(ext, indent= 4))
 print('Extract completed!')
+
 
 
